@@ -15,6 +15,7 @@ if (process.env.NODE_ENV === "production") {
 // Add routes, both API and view
 //app.use(routes);
 require("./routes/api/users")(app);
+require("./routes/api/portfolios")(app);
 //require("./routes/htmlRoutes")(app);
 
 

@@ -17,10 +17,18 @@ class Main extends Component {
 
   componentDidMount() {
     this.loadUsers();
+    this.loadPortfolios();
   }
 
   loadUsers = () => {
     API.getUsers()
+      .then(res =>
+        console.log(res)
+      )
+      .catch(err => console.log(err));
+  };
+  loadPortfolios = () => {
+    API.getPortfolios()
       .then(res =>
         console.log(res)
       )

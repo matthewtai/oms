@@ -3,11 +3,11 @@ import axios from "axios";
 export default {
   // Gets all books
   getUsers: function() {
-    return axios.get("/api/User");
+    return axios.get("/api/Users");
   },
   // Gets the book with the given id
-  getBook: function(id) {
-    return axios.get("/api/books/" + id);
+  getPortfolios: function(id) {
+    return axios.get("/api/Portfolios");
   },
   // Deletes the book with the given id
   deleteBook: function(id) {
