@@ -52,9 +52,8 @@
 import React, { Component } from 'react';
 import _ from 'lodash';
 import axios from 'axios';
-
-import SearchBar from './components/SearchBar/SearchBar';
-import StockList from './components/StockList/StockList';
+import SearchBar from '../../components/SearchBar/SearchBar';
+import StockList from '../../components/StockList/StockList';
 import './main.css';
 
 class Main extends Component {
