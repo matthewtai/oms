@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const apiRoutes = require("./routes/api/alphaApi");
 //const routes = require("./routes");
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -16,8 +17,9 @@ if (process.env.NODE_ENV === "production") {
 //app.use(routes);
 require("./routes/api/users")(app);
 require("./routes/api/portfolios")(app);
+// require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
-
+app.use(apiRoutes);
 
 var syncOptions = { force: false };
 
