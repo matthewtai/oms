@@ -13,4 +13,4 @@ router.get("/api/intraday", (req, res) => {
 
 module.exports = router;
 
-// https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=demo
+//testing
