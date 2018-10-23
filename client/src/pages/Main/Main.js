@@ -1,7 +1,7 @@
 // import React, { Component } from "react";
 // // import DeleteBtn from "../../components/DeleteBtn";
 // import Jumbotron from "../../components/Jumbotron";
-// import API from "../../utils/API";
+
 
 // class Main extends Component {
 //   state = {
@@ -55,8 +55,43 @@ import axios from 'axios';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import StockList from '../../components/StockList/StockList';
 import './main.css';
+import API from "../../utils/API";
 
 class Main extends Component {
+  state = {
+    books: [],
+    title: "",
+    author: "",
+    synopsis: ""
+  };
+
+  componentDidMount() {
+    this.loadUsers();
+    this.handleAlphaApi();
+  }
+
+  loadUsers = () => {
+    API.getUsers()
+      .then(res =>
+        console.log(res)
+      )
+      .catch(err => console.log(err));
+  };
+  loadPortfolios = () => {
+    API.getPortfolios()
+      .then(res =>
+        console.log(res)
+      )
+      .catch(err => console.log(err));
+  };
+  handleAlphaApi = () => {
+    API.getSearch()
+    .then(res =>{
+      console.log(res);
+    }
+    )
+    .catch(err => console.log(err));
+  }
   constructor() {
     super();
 
@@ -70,13 +105,13 @@ class Main extends Component {
     this.handleChange = this.handleChange.bind(this);
   }
 
-  handleChange(e) {
+  handleChange= (e) => {
     this.setState({
       value: e.target.value
     });
   }
 
-  handleClick(e) {
+  handleClick = (e) => {
     if(e) e.preventDefault();
     this.setState({
       value: '',
@@ -102,7 +137,7 @@ class Main extends Component {
     .catch(error => console.log(error))
   }
 
-  render () {
+  render = () => {
     let stocks = this.state.stocks;
     const value = this.state.value;
 
@@ -117,6 +152,4 @@ class Main extends Component {
     );
   }
 }
-
 export default Main;
-

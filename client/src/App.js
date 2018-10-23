@@ -5,6 +5,14 @@ import Main from "./pages/Main";
 // import NoMatch from "./pages/NoMatch";
 
 
+  // handleApiForSubmit = () => {
+  //   event.preventDefault();
+  //     API.getSearch(this.state.stockSearch)
+  //       .then(res => this.state({ stock: res.data}))
+  //       .catch(err => console.log(err));
+  // }
+
+  
 const App = () => (
   <Router>
     <div>
