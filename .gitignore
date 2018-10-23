@@ -10,6 +10,8 @@
 /build
 
 # misc
+git rm env.local --cached
+git rm env.staging --cached
 .env
 .DS_Store
 .env.local
