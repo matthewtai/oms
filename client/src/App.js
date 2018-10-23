@@ -11,6 +11,7 @@ const App = () => (
       <Nav />
       <Switch>
         <Route exact path="/" component={Main} />
+        {/* <Route exact path="/intraday" component={Main} /> */}
         {/* <Route exact path="/books" component={Books} />
         <Route exact path="/books/:id" component={Detail} />
         <Route component={NoMatch} /> */}
