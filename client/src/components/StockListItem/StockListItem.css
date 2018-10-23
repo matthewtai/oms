@@ -1,0 +1,39 @@
+.StockListItem {
+  box-shadow: border-box;
+  flex: 0 0 98%;
+  list-style: none;
+  display: flex;
+  padding: 2rem;
+  margin: .25rem;
+  text-align: left;
+  flex-flow: column wrap;
+  background-color: #fefefe;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+  transition: all 0.3s cubic-bezier(.25,.8,.25,1);
+}
+
+@media only screen and (min-width: 600px) {
+  .StockListItem {
+   flex: 0 0 48%;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  .StockListItem {
+   flex: 0 0 24%;
+  }
+}
+
+.StockListItem:hover {
+  background-color: #fff;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.24), 0 10px 10px rgba(0,0,0,0.20);
+}
+
+.StockListItem > * {
+  letter-spacing: 1px;
+  font-weight: 500;
+}
+.StockListItem > * span{
+  color: #757575;
+  font-weight: 400;
+}
