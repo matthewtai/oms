@@ -37,7 +37,7 @@ class Main extends Component {
 
   render() {
     return (
-      <Jumbotron><h1>Books On My List</h1></Jumbotron>
+      <Jumbotron><h1>Portfolio folder is console logged</h1></Jumbotron>
     );
   }
 }
