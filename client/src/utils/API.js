@@ -1,17 +1,17 @@
 import axios from "axios";
 
 export default {
-  // Gets all books
+  // Gets all users
   getUsers: function() {
     return axios.get("/api/Users");
   },
-  // Gets the book with the given id
-  getPortfolios: function(id) {
+  // Gets portfolios
+  getPortfolios: function() {
     return axios.get("/api/Portfolios");
   },
   //Get live stock data
-  getIntraday: function(id) {
-    return axios.get("/api/intraday");
+  getQuote: function(query) {
+    return axios.get("/api/quote", { params: { symbol: query } });
   },
   // Deletes the book with the given id
   deleteBook: function(id) {

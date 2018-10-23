@@ -17,7 +17,7 @@ class Main extends Component {
 
   componentDidMount() {
     this.loadUsers();
-    this.alphaApi();
+    this.onQuoteSearch("AMZN");
   }
 
   loadUsers = () => {
@@ -34,10 +34,9 @@ class Main extends Component {
       )
       .catch(err => console.log(err));
   };
-  alphaApi = () => {
-    API.getIntraday()
+  onQuoteSearch = (query) => {
+    API.getQuote(query)
     .then(res =>{
-      console.log("hello")
       console.log(res)
     }
     )
