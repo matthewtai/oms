@@ -17,7 +17,7 @@ class Main extends Component {
 
   componentDidMount() {
     this.loadUsers();
-    this.alphaApi();
+    this.handleAlphaApi();
   }
 
   loadUsers = () => {
@@ -34,11 +34,10 @@ class Main extends Component {
       )
       .catch(err => console.log(err));
   };
-  alphaApi = () => {
-    API.getIntraday()
+  handleAlphaApi = () => {
+    API.getSearch()
     .then(res =>{
-      console.log("hello")
-      console.log(res)
+      console.log(res);
     }
     )
     .catch(err => console.log(err));

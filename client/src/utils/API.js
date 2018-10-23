@@ -10,8 +10,8 @@ export default {
     return axios.get("/api/Portfolios");
   },
   //Get live stock data
-  getIntraday: function(id) {
-    return axios.get("/api/intraday");
+  getSearch: function(id) {
+    return axios.get("/api/search");
   },
   // Deletes the book with the given id
   deleteBook: function(id) {
@@ -20,5 +20,9 @@ export default {
   // Saves a book to the database
   saveBook: function(bookData) {
     return axios.post("/api/books", bookData);
+  },
+  getResults: function(query) {
+    return axios.get("/api/search", { params: { q: query } });
   }
 };
+  

@@ -2,15 +2,14 @@ const axios = require("axios");
 const router = require("express").Router();
 const keys = require("./keys/keys");
 
-router.get("/api/intraday", (req, res) => {
+router.get("/search", (req, res) => {
+  
   axios
-    .get("https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=" + { api:keys.alpha.api })
+    .get("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=query", { params:keys.alpha.api })
     .then( Response => {
-      res.json(Response.data);
+      console.log(Response.data.bestMatches[0]);
     })
     .catch(err => res.status(422).json(err));
 });
 
 module.exports = router;
-
-//testing
