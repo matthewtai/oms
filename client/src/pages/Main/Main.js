@@ -58,15 +58,15 @@ import './main.css';
 import API from "../../utils/API";
 
 class Main extends Component {
+  
   state = {
     stocks: [],
     term: null,
     value: ''
   };
-
   componentDidMount() {
     this.loadUsers();
-    this.onQuoteSearch("AMZN");
+    //this.performSearch();
     this.handleAlphaApi();
   }
 
@@ -84,7 +84,7 @@ class Main extends Component {
       )
       .catch(err => console.log(err));
   };
-  onQuoteSearch = (query) => {
+  performSearch = (query) => {
     API.getQuote(query)
     .then(res =>{
       console.log(res)
@@ -101,8 +101,16 @@ class Main extends Component {
     .catch(err => console.log(err));
   }
 
-    handleClick = this.handleClick.bind(this);
-    handleChange = this.handleChange.bind(this);
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    this.performSearch(this.state.value);
+  }
+
+  
+
+    //this.handleClick = this.handleClick.bind(this);
+    //handleChange = this.handleChange.bind(this);
   
 
   handleChange= (e) => {
@@ -146,7 +154,7 @@ class Main extends Component {
         <h1 className="App__Title">Stock Search</h1>
         <SearchBar value={ value }
                    onChange={ this.handleChange }
-                   onClick={ this.handleClick }/>
+                   onClick={ this.handleSubmit }/>
         <StockList stockItems={ this.state.stocks }/>
       </div>
     );

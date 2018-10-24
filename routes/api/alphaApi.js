@@ -30,7 +30,7 @@ const keys = require("./keys/keys");
 //     .catch(err => res.status(422).json(err));
 // });
 
-router.get("/api/quote", (req, res) => {
+router.get("/quote", (req, res) => {
   //console.log(req.query.symbol);
   axios
     .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.query.symbol}&apikey=${keys.alpha.api}`)
