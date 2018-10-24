@@ -58,15 +58,15 @@ import './main.css';
 import API from "../../utils/API";
 
 class Main extends Component {
+  
   state = {
-    books: [],
-    title: "",
-    author: "",
-    synopsis: ""
+    stocks: [],
+    term: null,
+    value: ''
   };
-
   componentDidMount() {
     this.loadUsers();
+    //this.performSearch();
     this.handleAlphaApi();
   }
 
@@ -84,6 +84,14 @@ class Main extends Component {
       )
       .catch(err => console.log(err));
   };
+  performSearch = (query) => {
+    API.getQuote(query)
+    .then(res =>{
+      console.log(res)
+    }
+    ).catch(err => console.log(err));
+  }
+  
   handleAlphaApi = () => {
     API.getSearch()
     .then(res =>{
@@ -92,18 +100,18 @@ class Main extends Component {
     )
     .catch(err => console.log(err));
   }
-  constructor() {
-    super();
 
-    this.state = {
-      stocks: [],
-      term: null,
-      value: ''
-    };
+  handleSubmit = (event) => {
+    event.preventDefault();
 
-    this.handleClick = this.handleClick.bind(this);
-    this.handleChange = this.handleChange.bind(this);
+    this.performSearch(this.state.value);
   }
+
+  
+
+    //this.handleClick = this.handleClick.bind(this);
+    //handleChange = this.handleChange.bind(this);
+  
 
   handleChange= (e) => {
     this.setState({
@@ -111,31 +119,31 @@ class Main extends Component {
     });
   }
 
-  handleClick = (e) => {
-    if(e) e.preventDefault();
-    this.setState({
-      value: '',
-      term: this.state.value
-    });
+  // handleClick = (e) => {
+  //   if(e) e.preventDefault();
+  //   this.setState({
+  //     value: '',
+  //     term: this.state.value
+  //   });
 
-    let term = this.state.value;
-    const key = 'F41ON15LGCFM4PR7';
-    const url = `https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=${term}&apikey=${key}`;
+  //   let term = this.state.value;
+  //   const key = 'F41ON15LGCFM4PR7';
+  //   const url = `https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=${term}&apikey=${key}`;
 
-    axios.get(url)
-    .then(res => {
-      console.log(res.data);
-      let stocks = _.flattenDeep( Array.from(res.data['Stock Quotes']).map((stock) => [{symbol: stock['1. symbol'], price: stock['2. price'], volume: stock['3. volume'], timestamp: stock['4. timestamp']}]) );
-      console.log(stocks);
-      this.setState((state, props) => {
-        return {
-          ...state,
-        stocks
-        }
-      })
-    })
-    .catch(error => console.log(error))
-  }
+  //   axios.get(url)
+  //   .then(res => {
+  //     console.log(res.data);
+  //     let stocks = _.flattenDeep( Array.from(res.data['Stock Quotes']).map((stock) => [{symbol: stock['1. symbol'], price: stock['2. price'], volume: stock['3. volume'], timestamp: stock['4. timestamp']}]) );
+  //     console.log(stocks);
+  //     this.setState((state, props) => {
+  //       return {
+  //         ...state,
+  //       stocks
+  //       }
+  //     })
+  //   })
+  //   .catch(error => console.log(error))
+  // }
 
   render = () => {
     let stocks = this.state.stocks;
@@ -146,7 +154,7 @@ class Main extends Component {
         <h1 className="App__Title">Stock Search</h1>
         <SearchBar value={ value }
                    onChange={ this.handleChange }
-                   onClick={ this.handleClick }/>
+                   onClick={ this.handleSubmit }/>
         <StockList stockItems={ this.state.stocks }/>
       </div>
     );
