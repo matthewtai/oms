@@ -1,15 +1,18 @@
 import axios from "axios";
 
 export default {
-  // Gets all books
+  // Gets all users
   getUsers: function() {
     return axios.get("/api/Users");
   },
-  // Gets the book with the given id
-  getPortfolios: function(id) {
+  // Gets portfolios
+  getPortfolios: function() {
     return axios.get("/api/Portfolios");
   },
   //Get live stock data
+  getQuote: function(query) {
+    return axios.get("/api/quote", { params: { symbol: query } });
+  },
   getSearch: function(id) {
     return axios.get("/api/search");
   },
