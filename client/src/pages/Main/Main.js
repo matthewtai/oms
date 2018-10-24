@@ -67,7 +67,7 @@ class Main extends Component {
   componentDidMount() {
     this.loadUsers();
     //this.performSearch();
-    this.handleAlphaApi();
+    // this.handleAlphaApi();
   }
 
   loadUsers = () => {
@@ -84,11 +84,29 @@ class Main extends Component {
       )
       .catch(err => console.log(err));
   };
+
   performSearch = (query) => {
     API.getQuote(query)
     .then(res =>{
-      console.log(res)
+      console.log(res.data);
+      let stocks = _.flattenDeep( Array.from([res.data['Global Quote']]).map((stock) => 
+      [{
+        symbol: stock["01. symbol"], 
+        price: stock["05. price"], 
+        change: stock['10. change percent']},
+      ]) 
+      );
+      // let stocks = _.flattenDeep([res.data])
+      console.log(stocks);
+      this.setState((state, props) => {
+        return {
+          ...state,
+        stocks
+        }
+      });
     }
+
+    
     ).catch(err => console.log(err));
   }
   

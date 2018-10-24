@@ -11,8 +11,7 @@ const StockList = (props) => {
         <StockListItem key={ stock.symbol }
                        symbol={ stock.symbol }
                        price={ stock.price }
-                       volume={ stock.volume }
-                       timestamp={ stock.timestamp } />
+                       change={ stock.change } />
       );
   });
 

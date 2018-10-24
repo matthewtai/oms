@@ -33,7 +33,7 @@ const keys = require("./keys/keys");
 router.get("/quote", (req, res) => {
   //console.log(req.query.symbol);
   axios
-    .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.query.symbol}&apikey=${keys.alpha.api}`)
+    .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.query.symbol}&apikey=query${keys.alpha.api}`)
     .then( Response => {
             console.log(Response.data);
             res.json(Response.data);
@@ -46,9 +46,10 @@ router.get("/search", (req, res) => {
   axios
     .get("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=query", { params:keys.alpha.api })
     .then( Response => {
-      console.log(Response.data.bestMatches[0]);
+      console.log(Response.data.bestMatches[0]['2. name']);
     })
     .catch(err => res.status(422).json(err));
 });
 
 module.exports = router;
+
