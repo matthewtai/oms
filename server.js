@@ -19,7 +19,7 @@ require("./routes/api/users")(app);
 require("./routes/api/portfolios")(app);
 // require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
-app.use(apiRoutes);
+app.use("/api", apiRoutes);
 
 var syncOptions = { force: false };
 

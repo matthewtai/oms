@@ -35,11 +35,20 @@ router.get("/api/quote", (req, res) => {
   axios
     .get(`https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=${req.query.symbol}&apikey=${keys.alpha.api}`)
     .then( Response => {
-      res.json(Response.data);
+            console.log(Response.data);
+            res.json(Response.data);
+          })
+          .catch(err => res.status(422).json(err));
+});
+
+router.get("/search", (req, res) => {
+  
+  axios
+    .get("https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=BA&apikey=query", { params:keys.alpha.api })
+    .then( Response => {
+      console.log(Response.data.bestMatches[0]);
     })
     .catch(err => res.status(422).json(err));
 });
 
 module.exports = router;
-
-// https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=MSFT&interval=5min&apikey=demo
