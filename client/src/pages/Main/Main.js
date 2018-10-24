@@ -62,7 +62,9 @@ class Main extends Component {
   state = {
     stocks: [],
     term: null,
-    value: ''
+    value: '',
+    newWeight: 0,
+    price: 0,
   };
   componentDidMount() {
     this.loadUsers();
@@ -85,19 +87,34 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+  // handleNewWright = (value) => {
+  //   event.preventDefault();
+  //   this.setState({
+  //     newWeight: value
+  //   })
+  // };
+
+  // handleOwnedShares = (query) => {
+
+  // }
+
   performSearch = (query) => {
     API.getQuote(query)
     .then(res =>{
-      console.log(res.data);
+      console.log(res.data["Global Quote"]["05. price"]);
       let stocks = _.flattenDeep( Array.from([res.data['Global Quote']]).map((stock) => 
       [{
         symbol: stock["01. symbol"], 
         price: stock["05. price"], 
-        change: stock['10. change percent']},
+        change: stock["10. change percent"]},
       ]) 
       );
       // let stocks = _.flattenDeep([res.data])
       console.log(stocks);
+      this.setState({
+        price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
+      })
+      console.log(this.state.price)
       this.setState((state, props) => {
         return {
           ...state,
@@ -136,32 +153,6 @@ class Main extends Component {
       value: e.target.value
     });
   }
-
-  // handleClick = (e) => {
-  //   if(e) e.preventDefault();
-  //   this.setState({
-  //     value: '',
-  //     term: this.state.value
-  //   });
-
-  //   let term = this.state.value;
-  //   const key = 'F41ON15LGCFM4PR7';
-  //   const url = `https://www.alphavantage.co/query?function=BATCH_STOCK_QUOTES&symbols=${term}&apikey=${key}`;
-
-  //   axios.get(url)
-  //   .then(res => {
-  //     console.log(res.data);
-  //     let stocks = _.flattenDeep( Array.from(res.data['Stock Quotes']).map((stock) => [{symbol: stock['1. symbol'], price: stock['2. price'], volume: stock['3. volume'], timestamp: stock['4. timestamp']}]) );
-  //     console.log(stocks);
-  //     this.setState((state, props) => {
-  //       return {
-  //         ...state,
-  //       stocks
-  //       }
-  //     })
-  //   })
-  //   .catch(error => console.log(error))
-  // }
 
   render = () => {
     let stocks = this.state.stocks;
