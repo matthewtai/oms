@@ -13,6 +13,9 @@ module.exports = function(Sequelize, DataTypes) {
     cash:{
       type: DataTypes.DECIMAL
     }
+  },
+  {
+    timestamps: false
   });
 
   // Task.associate = function(radixDB) {

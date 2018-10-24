@@ -1,13 +1,13 @@
 USE omsDB;
 
-CREATE TABLE portfolios(
+/* CREATE TABLE portfolios(
 	id INTEGER AUTO_INCREMENT NOT NULL,
     portfolio VARCHAR(50),
     mandate VARCHAR(30),
     NAV DECIMAL(14, 2),
     cash DECIMAL(10,2),
     PRIMARY KEY(id)
-)
+) */
 
 
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 1", "segregated", 13000000, 3960000);
