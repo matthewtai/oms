@@ -14,12 +14,9 @@ class Main extends Component {
     stocks: [],
     term: null,
     value: '',
-<<<<<<< HEAD
     newWeight: 0,
     price: 0,
-=======
     data: []
->>>>>>> 586847c4ac41cff2768b867e290e513f12ccab2f
   };
   componentDidMount() {
     this.loadPortfolios();
@@ -51,6 +48,7 @@ class Main extends Component {
   //     newWeight: value
   //   })
   // };
+
 
   // handleOwnedShares = (query) => {
 
@@ -99,8 +97,6 @@ class Main extends Component {
 
     this.performSearch(this.state.value);
   }
-
-  
 
     //this.handleClick = this.handleClick.bind(this);
     //handleChange = this.handleChange.bind(this);
@@ -155,4 +151,5 @@ class Main extends Component {
     );
   }
 }
+
 export default Main;
