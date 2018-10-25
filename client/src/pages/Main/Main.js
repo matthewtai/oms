@@ -9,15 +9,15 @@ import 'react-table/react-table.css'
 import ReactTable from "react-table";
 
 class Main extends Component {
-  
-  state = {
-    stocks: [],
-    term: null,
-    value: '',
-    //newWeight: 0,
-    price: 0,
-    data: []
-  };
+
+    state = {
+      stocks: [],
+      term: null,
+      value: '',
+      price: 0,
+      data: [],
+    };
+
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
@@ -60,20 +60,13 @@ class Main extends Component {
     const index = portfolios.findIndex((element) => {
       return element.id === props.row.id;
     });
-    console.log(portfolios[index].cash*(portfolios[index].newWeight/100));
-    //console.log(event.row);
+    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
+    // console.log(this.state.price);
+    let newShares = (((portfolios[index].newWeight/100)-portfolios[index].old_weight/100)*portfolios[index].NAV) / (this.state.price * 1.30);
+    return portfolios[index].shares_buy_sell = newShares
   }
-  // handleNewWright = (value) => {
-  //   event.preventDefault();
-  //   this.setState({
-  //     newWeight: value
-  //   })
-  // };
 
-
-  // handleOwnedShares = (query) => {
-
-  // }
+  //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
   performSearch = (query) => {
     API.getQuote(query)
@@ -150,11 +143,12 @@ class Main extends Component {
     return portfolios[index].newWeight;
   }
 
+  
 
   render = () => {
-    let stocks = this.state.stocks;
     const value = this.state.value;
     //console.log(this.state.data.length);
+    console.log(this.state.data);
     return (
       <div className="App">
         <h1 className="App__Title">Stock Search</h1>
@@ -163,6 +157,7 @@ class Main extends Component {
                    onClick={ this.handleSubmit }/>
         <StockList stockItems={ this.state.stocks }/>
         {this.state.data.length ? (
+     
           <ReactTable
           data={this.state.data}
           columns={[
@@ -183,8 +178,16 @@ class Main extends Component {
                   accessor: "NAV"
                 },
                 {
-                  Header: "Cash",
+                  Header: "Starting Cash",
                   accessor: "cash"
+                },
+                {
+                  Header: "Current Cash(%)",
+                  accessor: "current_cash",
+                },
+                {
+                  Header: "Old Weight(%)",
+                  accessor: "old_weight",
                 },
                 {
                   Header: "New Weight",
@@ -203,8 +206,12 @@ class Main extends Component {
                   minWidth: 200
                 },
                 {
-                  Header: "Mandate",
-                  accessor: "mandate"
+                  Header: "Shares Owned",
+                  accessor: "shares_owned"
+                },
+                {
+                  Header: "Shares to Buy/Sell",
+                  accessor: "shares_buy_sell",
                 }
               ]
             }

@@ -12,6 +12,18 @@ module.exports = function(Sequelize, DataTypes) {
     },
     cash:{
       type: DataTypes.DECIMAL
+    },
+    current_cash:{
+      type: DataTypes.DECIMAL
+    },
+    old_weight: {
+      type: DataTypes.DECIMAL
+    },
+    shares_owned:{
+      type: DataTypes.DECIMAL
+    },
+    shares_buy_sell:{
+      type: DataTypes.DECIMAL
     }
   },
   {

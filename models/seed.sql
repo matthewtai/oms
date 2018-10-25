@@ -1,15 +1,5 @@
 USE omsDB;
 
-/* CREATE TABLE portfolios(
-	id INTEGER AUTO_INCREMENT NOT NULL,
-    portfolio VARCHAR(50),
-    mandate VARCHAR(30),
-    NAV DECIMAL(14, 2),
-    cash DECIMAL(10,2),
-    PRIMARY KEY(id)
-) */
-
-
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 1", "segregated", 13000000, 3960000);
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 2", "income", 12800000, 3840000);
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 3", "income", 287000000, 8610000);
@@ -33,3 +23,10 @@ INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 20", "
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 21", "balanced", 16600000, 498000);
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 22", "north american equity", 18000000, 540000);
 INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 23", "north american equity", 6700000, 201000);
+
+USE omsDB;
+
+ALTER TABLE portfolios ADD COLUMN shares_buy_sell INT(100);
+ALTER TABLE portfolios ADD COLUMN old_weight INT DEFAULT 0;
+ALTER TABLE portfolios ADD COLUMN current_cash INT(100) DEFAULT 2;
+ALTER TABLE portfolios ADD COLUMN shares_owned INT(100) DEFAULT 0;
