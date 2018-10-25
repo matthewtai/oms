@@ -20,6 +20,8 @@
     "nodemon": "^1.11.0"
   },
   "dependencies": {
+    "ag-grid-community": "^19.0.0",
+    "ag-grid-react": "^19.0.0",
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "dotenv": "^6.1.0",
