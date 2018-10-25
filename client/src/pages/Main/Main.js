@@ -14,7 +14,7 @@ class Main extends Component {
     stocks: [],
     term: null,
     value: '',
-    newWeight: 0,
+    //newWeight: 0,
     price: 0,
     data: []
   };
@@ -34,14 +34,35 @@ class Main extends Component {
   loadPortfolios = () => {
     API.getPortfolios()
       .then(res =>{
-        console.log(res.data)
-        this.setState({
-          data: res.data
-        });
+        //console.log(res.data)
+        // this.setState({
+        //   data: res.data
+        // });
+        this.setupData(res.data);
       })
       .catch(err => console.log(err));
   };
+  
+  setupData = data =>{
 
+    data.map(element => {
+      element.newWeight=0
+    });
+
+    this.setState({
+        data: data
+    });
+  }
+
+  alertSomething = (props) =>{
+    //event.preventDefault();
+    const portfolios = this.state.data
+    const index = portfolios.findIndex((element) => {
+      return element.id === props.row.id;
+    });
+    console.log(portfolios[index].cash*(portfolios[index].newWeight/100));
+    //console.log(event.row);
+  }
   // handleNewWright = (value) => {
   //   event.preventDefault();
   //   this.setState({
@@ -102,29 +123,57 @@ class Main extends Component {
     //handleChange = this.handleChange.bind(this);
   
 
-  handleChange= (e) => {
+  handleSearchChange= (e) => {
     this.setState({
       value: e.target.value
     });
   }
 
+  handleNewWeightChange = (props, event) =>{
+    //console.log(props.target.value)
+    const portfolios = this.state.data
+    const index = portfolios.findIndex((element) => {
+      return element.id === props.row.id;
+    });
+    //console.log(event.target.value);
+    portfolios[index].newWeight = event.target.value;
+    this.setState({
+      data: portfolios
+    })
+  }
+
+  getnewWeightValue = (props) =>{
+    const portfolios = this.state.data
+    const index = portfolios.findIndex((element) => {
+      return element.id === props.row.id;
+    });
+    return portfolios[index].newWeight;
+  }
+
+
   render = () => {
     let stocks = this.state.stocks;
     const value = this.state.value;
-
+    //console.log(this.state.data.length);
     return (
       <div className="App">
         <h1 className="App__Title">Stock Search</h1>
         <SearchBar value={ value }
-                   onChange={ this.handleChange }
+                   onChange={ this.handleSearchChange }
                    onClick={ this.handleSubmit }/>
         <StockList stockItems={ this.state.stocks }/>
-        <ReactTable
+        {this.state.data.length ? (
+          <ReactTable
           data={this.state.data}
           columns={[
             {
               //Header: "Name",
               columns: [
+                {
+                  Header: "ID",
+                  id: "id",
+                  accessor: "id"
+                },
                 {
                   Header: "Portfolio",
                   accessor: "portfolio"
@@ -138,6 +187,22 @@ class Main extends Component {
                   accessor: "cash"
                 },
                 {
+                  Header: "New Weight",
+                  Cell: props => (<div>
+                      <input 
+                        className='number'
+                        value={this.getnewWeightValue(props)}
+                        onChange={(e)=>this.handleNewWeightChange(props,e)}
+                      />
+                      <button 
+                        onClick={()=>this.alertSomething(props)}
+                      >
+                        Go
+                      </button>
+                    </div>),
+                  minWidth: 200
+                },
+                {
                   Header: "Mandate",
                   accessor: "mandate"
                 }
@@ -146,7 +211,13 @@ class Main extends Component {
           ]}
           //defaultPageSize={10}
           className="-striped -highlight"
+          showPagination= {false}
+          defaultPageSize={this.state.data.length}
+          
         />
+        ):(
+          <h2>NoData</h2>
+        )}
       </div>
     );
   }
