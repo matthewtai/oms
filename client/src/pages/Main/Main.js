@@ -9,6 +9,10 @@ import 'react-table/react-table.css'
 import ReactTable from "react-table";
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
+import { initializeIcons } from '@uifabric/icons';
+
+initializeIcons();
+
 class Main extends Component {
 
     state = {
