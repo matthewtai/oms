@@ -14,3 +14,11 @@
   font-family: 'Roboto', sans-serif;
   src: url('https://fonts.googleapis.com/css?family=Roboto')
 }
+
+.SearchBar {
+  height: 50px;
+  width: 20%;
+  margin-left: 2.5rem;
+  margin-top: 2.5rem;
+  margin-bottom: 2.5rem;
+  }

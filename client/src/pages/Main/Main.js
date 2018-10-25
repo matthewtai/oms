@@ -7,6 +7,11 @@ import './main.css';
 import API from "../../utils/API";
 import 'react-table/react-table.css'
 import ReactTable from "react-table";
+import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
+import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
+import { initializeIcons } from '@uifabric/icons';
+
+initializeIcons();
 
 class Main extends Component {
 
@@ -106,8 +111,7 @@ class Main extends Component {
     .catch(err => console.log(err));
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = () => {
 
     this.performSearch(this.state.value);
   }
@@ -116,9 +120,9 @@ class Main extends Component {
     //handleChange = this.handleChange.bind(this);
   
 
-  handleSearchChange= (e) => {
+  handleSearchChange= () => {
     this.setState({
-      value: e.target.value
+      value: this.value
     });
   }
 
@@ -146,15 +150,24 @@ class Main extends Component {
   
 
   render = () => {
-    const value = this.state.value;
     //console.log(this.state.data.length);
     console.log(this.state.data);
     return (
+      <Fabric>
       <div className="App">
-        <h1 className="App__Title">Stock Search</h1>
-        <SearchBar value={ value }
+        <h1 className="App__Title">OMS</h1>
+      <div className="SearchBar">
+         <SearchBox
+          placeholder="Ticker"
+          onChange={value => this.setState({
+            value: value})}
+          onSearch={foo => this.handleSubmit(foo)}
+        />
+        </div>
+
+        {/* <SearchBar value={ value }
                    onChange={ this.handleSearchChange }
-                   onClick={ this.handleSubmit }/>
+                   onClick={ this.handleSubmit }/> */}
         <StockList stockItems={ this.state.stocks }/>
         {this.state.data.length ? (
      
@@ -226,6 +239,7 @@ class Main extends Component {
           <h2>NoData</h2>
         )}
       </div>
+      </Fabric>
     );
   }
 }
