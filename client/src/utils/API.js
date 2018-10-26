@@ -13,8 +13,8 @@ export default {
   getQuote: function(query) {
     return axios.get("/api/quote", { params: { symbol: query } });
   },
-  getSearch: function(id) {
-    return axios.get("/api/search");
+  getSearch: function(query) {
+    return axios.get("/api/search", { params: { symbol: query } });
   },
   // Deletes the book with the given id
   deleteBook: function(id) {
@@ -28,4 +28,3 @@ export default {
     return axios.get("/api/search", { params: { endpoint: query } });
   }
 };
-  
