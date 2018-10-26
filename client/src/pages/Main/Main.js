@@ -7,6 +7,7 @@ import './main.css';
 import API from "../../utils/API";
 import 'react-table/react-table.css'
 import ReactTable from "react-table";
+import StagingTable from '../../components/StagingTable/StagingTable'
 import { SearchBox } from 'office-ui-fabric-react/lib/SearchBox';
 import { Fabric } from 'office-ui-fabric-react/lib/Fabric';
 import { initializeIcons } from '@uifabric/icons';
@@ -239,6 +240,7 @@ class Main extends Component {
           <h2>NoData</h2>
         )}
       </div>
+      {/* <StagingTable/> */}
       </Fabric>
     );
   }
