@@ -138,6 +138,7 @@ class Main extends Component {
     this.setState({
       data: portfolios
     })
+    this.alertSomething(props);
   }
 
   getnewWeightValue = (props) =>{
@@ -211,11 +212,6 @@ class Main extends Component {
                         value={this.getnewWeightValue(props)}
                         onChange={(e)=>this.handleNewWeightChange(props,e)}
                       />
-                      <button 
-                        onClick={()=>this.alertSomething(props)}
-                      >
-                        Go
-                      </button>
                     </div>),
                   minWidth: 200
                 },
