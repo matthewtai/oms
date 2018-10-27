@@ -26,7 +26,7 @@ class Main extends Component {
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
-    // this.handleAlphaApi();
+    this.handleAlphaApi();
   }
 
   loadUsers = () => {
@@ -144,10 +144,16 @@ class Main extends Component {
     const index = portfolios.findIndex((element) => {
       return element.id === props.row.id;
     });
+    console.log(index)
     return portfolios[index].newWeight;
   }
 
-  
+  // handleSaveStages = () => {
+  //   const portfolios = this.state
+  //   const index = portfolios.findIndex((element) => {
+  //     return element.id === props.row.id;
+  //   });
+  // }
 
   render = () => {
     //console.log(this.state.data.length);
