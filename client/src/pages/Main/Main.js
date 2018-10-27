@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import _ from "lodash";
 //import axios from 'axios';
-import SearchBar from "../../components/SearchBar/SearchBar";
+// import SearchBar from "../../components/SearchBar/SearchBar";
 import StockList from "../../components/StockList/StockList";
-import StockListItem from "../../components/StockListItem/StockListItem";
+// import StockListItem from "../../components/StockListItem/StockListItem";
 import "./main.css";
 import API from "../../utils/API";
 import "react-table/react-table.css";
@@ -24,13 +24,16 @@ class Main extends Component {
     price: 0,
     data: [],
     tickerName: "",
-    currency: ""
+    currency: "",
+    stagingData : [],
+    exchangerate: ""
   };
 
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
     this.handleAlphaApi();
+    this.loadStagingData();
   }
 
   loadUsers = () => {
@@ -59,7 +62,16 @@ class Main extends Component {
     });
   };
 
-  alertSomething = props => {
+  loadStagingData = () => {
+    API.getStaging()
+      .then(res => {
+        this.setState({
+          stagingData: res.data
+        });
+      })
+  }
+
+  alertSomething = (props) =>{
     //event.preventDefault();
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -71,7 +83,7 @@ class Main extends Component {
       ((portfolios[index].newWeight / 100 -
         portfolios[index].old_weight / 100) *
         portfolios[index].NAV) /
-      (this.state.price * 1.3);
+      (this.state.price * this.state.exchangerate);
     return (portfolios[index].shares_buy_sell = newShares);
   };
 
@@ -86,7 +98,8 @@ class Main extends Component {
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
-        console.log(res.data["Global Quote"]["05. price"]);
+        //console.log(res.data["Global Quote"]["05. price"]);
+        // console.log(res.data["Global Quote"]["05. price"]);
         let stocks = _.flattenDeep(
           Array.from([res.data["Global Quote"]]).map(stock => [
             {
@@ -97,11 +110,11 @@ class Main extends Component {
           ])
         );
         // let stocks = _.flattenDeep([res.data])
-        console.log(stocks);
+        //console.log(stocks);
         this.setState({
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
-        console.log(this.state.price);
+        //console.log(this.state.price);
         this.setState((state, props) => {
           return {
             ...state,
@@ -112,17 +125,35 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+ 
   handleAlphaApi = query => {
     API.getSearch(query)
       .then(res => {
-        console.log(res);
+        // console.log(res);
 
         const namecurrency = _.flattenDeep(res.data.bestMatches);
         this.setState({
           tickerName: namecurrency[0]["2. name"],
           currency: namecurrency[0]["8. currency"]
         });
-        console.log(this.state.namecurrency);
+        console.log(this.state.currency);
+        this.handleAlphaApiCurrency(this.state.currency)
+      })
+      .catch(err => console.log(err));
+  };
+
+  handleAlphaApiCurrency = query => {
+    API.getExchange(query)
+      .then(res => {
+        console.log(res);
+
+        const exchangerate = _.flattenDeep([res.data["Realtime Currency Exchange Rate"]]);
+        // console.log(exchangerate[0]["5. Exchange Rate"])
+        this.setState({
+          exchangerate: exchangerate[0]["5. Exchange Rate"],
+          
+        });
+        console.log(this.state.exchangerate);
       })
       .catch(err => console.log(err));
   };
@@ -185,7 +216,7 @@ class Main extends Component {
 
   render = () => {
     //console.log(this.state.data.length);
-    console.log(this.state.data);
+    // console.log(this.state.data);
     return (
       <Fabric>
         <div className="App">
@@ -286,6 +317,11 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
+          {this.state.stagingData.length? (
+          <StagingTable
+            data={this.state.stagingData}
+          />
+          ):(<h2>Hahahah</h2>)}
         </div>
         {/* <StagingTable/> */}
       </Fabric>
