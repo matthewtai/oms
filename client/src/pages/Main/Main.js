@@ -65,6 +65,7 @@ class Main extends Component {
   loadStagingData = () => {
     API.getStaging()
       .then(res => {
+        console.log(res);
         this.setState({
           stagingData: res.data
         });
@@ -194,11 +195,14 @@ class Main extends Component {
       return element.id === props.row.id;
     });
     const save = {
+      portfolio_manager: portfolios[index].portfolio,
+      ticker: portfolios[index].portfolio,
       portfolio: portfolios[index].portfolio,
       old_weight: portfolios[index].old_weight,
       new_weight: portfolios[index].newWeight,
       shares_buy_sell: portfolios[index].shares_buy_sell,
-      buy_or_sell: portfolios[index].buy_or_sell
+      buy_or_sell: portfolios[index].portfolio,
+      ticker_name: portfolios[index].portfolio,
     }
     Axios.post("/api/posts/", save, function(result){
        console.log("main.js results: " + result);

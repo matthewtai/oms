@@ -20,7 +20,6 @@ require("./routes/api/portfolios")(app);
 require("./routes/api/stages")(app);
 // require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
-require("./routes/api/stages-api-routes")(app);
 app.use("/api", apiRoutes);
 
 var syncOptions = { force: false };
