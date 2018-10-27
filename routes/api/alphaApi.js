@@ -55,7 +55,7 @@ router.get("/search", (req, res) => {
 router.get("/exchange", (req, res) => {
   console.log(req.query.currency)
 axios
-    .get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${req.query.currency}&to_currency=CAD&apikey=QIRN439QR9P9A8QD`, { params :{ apikey:keys.alpha.api }})
+    .get(`https://www.alphavantage.co/query?function=CURRENCY_EXCHANGE_RATE&from_currency=${req.query.currency}&to_currency=CAD&apikey=J69JAFWB80RP7C03`, { params :{ apikey:keys.alpha.api }})
     .then( Response => {
       
       console.log(Response.data);

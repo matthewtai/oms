@@ -71,7 +71,7 @@ class Main extends Component {
       ((portfolios[index].newWeight / 100 -
         portfolios[index].old_weight / 100) *
         portfolios[index].NAV) /
-      (this.state.price * 1.3);
+      (this.state.price * this.state.exchangerate);
     return (portfolios[index].shares_buy_sell = newShares);
   };
 
