@@ -20,7 +20,7 @@ module.exports = function(Sequelize, DataTypes) {
         type: DataTypes.DECIMAL
       },
       buy_or_sell:{
-        type: DataTypes.DECIMAL
+        type: DataTypes.STRING
       },
       ticker_name:{
         type: DataTypes.STRING

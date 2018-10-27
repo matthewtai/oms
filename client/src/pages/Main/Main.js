@@ -29,7 +29,7 @@ class Main extends Component {
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
-    // this.handleAlphaApi();
+    this.handleAlphaApi();
   }
 
   loadUsers = () => {
@@ -53,7 +53,6 @@ class Main extends Component {
     data.map(element => {
       element.newWeight = 0;
     });
-
     this.setState({
       data: data
     });
@@ -77,6 +76,13 @@ class Main extends Component {
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
+  // handleSaveStages = () => {
+  //   const portfolios = this.state
+  //   const index = portfolios.findIndex((element) => {
+  //     return element.id === props.row.id;
+  //   });
+    
+  // }
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
@@ -154,8 +160,9 @@ class Main extends Component {
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
+    console.log(index)
     return portfolios[index].newWeight;
-  };
+  }
 
   render = () => {
     //console.log(this.state.data.length);

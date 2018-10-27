@@ -44,7 +44,7 @@ router.get("/quote", (req, res) => {
 router.get("/search", (req, res) => {
 
   axios
-    .get(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${req.query.symbol}&apikey=09PWB793RKYFFDYL`)
+    .get(`https://www.alphavantage.co/query?function=SYMBOL_SEARCH&keywords=${req.query.symbol}&apikey=query`, { params :{ apikey:keys.alpha.api }})
     .then( Response => {
       console.log(Response.data);
       res.json(Response.data);
