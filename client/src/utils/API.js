@@ -16,16 +16,19 @@ export default {
   getSearch: function(id) {
     return axios.get("/api/search");
   },
-  // Deletes the book with the given id
-  deleteBook: function(id) {
-    return axios.delete("/api/books/" + id);
-  },
-  // Saves a book to the database
-  saveBook: function(bookData) {
-    return axios.post("/api/books", bookData);
-  },
-  getResults: function(query) {
-    return axios.get("/api/search", { params: { endpoint: query } });
+  getStaging: function(){
+    return axios.get("/api/Staging");
   }
+  // // Deletes the book with the given id
+  // deleteBook: function(id) {
+  //   return axios.delete("/api/books/" + id);
+  // },
+  // // Saves a book to the database
+  // saveBook: function(bookData) {
+  //   return axios.post("/api/books", bookData);
+  // },
+  // getResults: function(query) {
+  //   return axios.get("/api/search", { params: { endpoint: query } });
+  // }
 };
   

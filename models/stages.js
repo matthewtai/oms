@@ -1,5 +1,5 @@
 module.exports = function(Sequelize, DataTypes) {
-    var Stages = Sequelize.define("stages", {
+    var Stages = Sequelize.define("Stages", {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
       portfolio_manager: {
         type: DataTypes.STRING

@@ -15,19 +15,22 @@ import { initializeIcons } from '@uifabric/icons';
 initializeIcons();
 
 class Main extends Component {
-
-    state = {
-      stocks: [],
-      term: null,
-      value: '',
-      price: 0,
-      data: [],
-    };
+  state = {
+    stocks: [],
+    term: null,
+    value: "",
+    price: 0,
+    data: [],
+    tickerName: "",
+    currency: "",
+    stagingData : []
+  };
 
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
-    // this.handleAlphaApi();
+    this.handleAlphaApi();
+    this.loadStagingData();
   }
 
   loadUsers = () => {
@@ -51,6 +54,7 @@ class Main extends Component {
   
   setupData = data =>{
 
+
     data.map(element => {
       element.newWeight=0
     });
@@ -58,6 +62,15 @@ class Main extends Component {
     this.setState({
         data: data
     });
+  }
+
+  loadStagingData = () => {
+    API.getStaging()
+      .then(res => {
+        this.setState({
+          stagingData: res.data
+        });
+      })
   }
 
   alertSomething = (props) =>{
@@ -76,41 +89,47 @@ class Main extends Component {
 
   performSearch = (query) => {
     API.getQuote(query)
-    .then(res =>{
-      console.log(res.data["Global Quote"]["05. price"]);
-      let stocks = _.flattenDeep( Array.from([res.data['Global Quote']]).map((stock) => 
-      [{
-        symbol: stock["01. symbol"], 
-        price: stock["05. price"], 
-        change: stock["10. change percent"]},
-      ]) 
-      );
-      // let stocks = _.flattenDeep([res.data])
-      console.log(stocks);
-      this.setState({
-        price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
+      .then(res => {
+        //console.log(res.data["Global Quote"]["05. price"]);
+        let stocks = _.flattenDeep(
+          Array.from([res.data["Global Quote"]]).map(stock => [
+            {
+              symbol: stock["01. symbol"],
+              price: stock["05. price"],
+              change: stock["10. change percent"]
+            }
+          ])
+        );
+        // let stocks = _.flattenDeep([res.data])
+        //console.log(stocks);
+        this.setState({
+          price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
+        });
+        //console.log(this.state.price);
+        this.setState((state, props) => {
+          return {
+            ...state,
+            stocks
+          };
+        });
       })
-      console.log(this.state.price)
-      this.setState((state, props) => {
-        return {
-          ...state,
-        stocks
-        }
-      });
-    }
+      .catch(err => console.log(err));
+  };
 
-    
-    ).catch(err => console.log(err));
-  }
-  
-  handleAlphaApi = () => {
-    API.getSearch()
-    .then(res =>{
-      console.log(res);
-    }
-    )
-    .catch(err => console.log(err));
-  }
+  handleAlphaApi = query => {
+    API.getSearch(query)
+      .then(res => {
+        //console.log(res);
+
+        const namecurrency = _.flattenDeep(res.data.bestMatches);
+        this.setState({
+          tickerName: namecurrency[0]["2. name"],
+          currency: namecurrency[0]["8. currency"]
+        });
+        //console.log(this.state.namecurrency);
+      })
+      .catch(err => console.log(err));
+  };
 
   handleSubmit = () => {
 
@@ -146,6 +165,7 @@ class Main extends Component {
     const index = portfolios.findIndex((element) => {
       return element.id === props.row.id;
     });
+    //console.log(index)
     return portfolios[index].newWeight;
   }
 
@@ -153,7 +173,7 @@ class Main extends Component {
 
   render = () => {
     //console.log(this.state.data.length);
-    console.log(this.state.data);
+    //console.log(this.state.stagingData);
     return (
       <Fabric>
       <div className="App">
@@ -177,66 +197,65 @@ class Main extends Component {
           data={this.state.data}
           columns={[
             {
-              //Header: "Name",
-              columns: [
-                {
-                  Header: "ID",
-                  id: "id",
-                  accessor: "id"
-                },
-                {
-                  Header: "Portfolio",
-                  accessor: "portfolio"
-                },
-                {
-                  Header: "NAV",
-                  accessor: "NAV"
-                },
-                {
-                  Header: "Starting Cash",
-                  accessor: "cash"
-                },
-                {
-                  Header: "Current Cash(%)",
-                  accessor: "current_cash",
-                },
-                {
-                  Header: "Old Weight(%)",
-                  accessor: "old_weight",
-                },
-                {
-                  Header: "New Weight",
-                  Cell: props => (<div>
-                      <input 
-                        className='number'
-                        value={this.getnewWeightValue(props)}
-                        onChange={(e)=>this.handleNewWeightChange(props,e)}
-                      />
-                    </div>),
-                  minWidth: 200
-                },
-                {
-                  Header: "Shares Owned",
-                  accessor: "shares_owned"
-                },
-                {
-                  Header: "Shares to Buy/Sell",
-                  accessor: "shares_buy_sell",
-                }
-              ]
+             
+              Header: "ID",
+              id: "id",
+              accessor: "id"
+            },
+            {
+              Header: "Portfolio",
+              accessor: "portfolio"
+            },
+            {
+              Header: "NAV",
+              accessor: "NAV"
+            },
+            {
+              Header: "Starting Cash",
+              accessor: "cash"
+            },
+            {
+              Header: "Current Cash(%)",
+              accessor: "current_cash",
+            },
+            {
+              Header: "Old Weight(%)",
+              accessor: "old_weight",
+            },
+            {
+              Header: "New Weight",
+              Cell: props => (<div>
+                  <input 
+                    className='number'
+                    value={this.getnewWeightValue(props)}
+                    onChange={(e)=>this.handleNewWeightChange(props,e)}
+                  />
+                </div>),
+              minWidth: 200
+            },
+            {
+              Header: "Shares Owned",
+              accessor: "shares_owned"
+            },
+            {
+              Header: "Shares to Buy/Sell",
+              accessor: "shares_buy_sell",
             }
           ]}
-          //defaultPageSize={10}
-          className="-striped -highlight"
-          showPagination= {false}
-          defaultPageSize={this.state.data.length}
-          
-        />
-        ):(
-          <h2>NoData</h2>
-        )}
-      </div>
-      {/* <StagingTable/> */}
+            //defaultPageSize={10}
+            className="-striped -highlight"
+            showPagination={false}
+            defaultPageSize={this.state.data.length}
+          />
+          ) : (
+            <h2>NoData</h2>
+          )}
+          {this.state.stagingData.length? (
+          <StagingTable
+            data={this.state.stagingData}
+          />
+        ):(<h2>Hahahah</h2>)}
+        </div>
       </Fabric>
     );
   }
