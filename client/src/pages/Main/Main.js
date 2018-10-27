@@ -12,6 +12,7 @@ import StagingTable from "../../components/StagingTable/StagingTable";
 import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
+import Axios from "axios";
 
 initializeIcons();
 
@@ -81,8 +82,7 @@ class Main extends Component {
   //   const index = portfolios.findIndex((element) => {
   //     return element.id === props.row.id;
   //   });
-    
-  // }
+  
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
@@ -155,12 +155,31 @@ class Main extends Component {
     this.alertSomething(props);
   };
 
+  //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
+
+  handleSaveStages = (props) => {
+    const portfolios = this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    const save = {
+      portfolio: portfolios[index].portfolio,
+      old_weight: portfolios[index].old_weight,
+      new_weight: portfolios[index].newWeight,
+      shares_buy_sell: portfolios[index].shares_buy_sell,
+      buy_or_sell: portfolios[index].buy_or_sell
+    }
+    Axios.post("/api/posts/", save, function(result){
+       console.log("main.js results: " + result);
+    });
+  }
+  
   getnewWeightValue = props => {
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
-    console.log(index)
+    // console.log(index)
     return portfolios[index].newWeight;
   }
 
@@ -242,6 +261,19 @@ class Main extends Component {
                     {
                       Header: "Shares to Buy/Sell",
                       accessor: "shares_buy_sell"
+                    },
+                    {
+                      Header: "Save",
+                      Cell: props => (
+                        <div>
+                          <button 
+                               onClick={()=>this.handleSaveStages(props)}
+                              >
+                              Save
+                            </button>
+                        </div>
+                      ),
+                      minWidth: 50
                     }
                   ]
                 }

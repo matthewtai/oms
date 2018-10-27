@@ -1,4 +1,4 @@
-var db = require(".../modles");
+var db = require("../../models");
 
 module.exports = function(app) {
     app.get("/api/stages", function(req,res){
@@ -9,9 +9,9 @@ module.exports = function(app) {
 
     app.post("/api/posts", function(req, res){
         db.Stages.create({
-            portfilio_manager: req.body.portfilio_manager,
+            portfolio_manager: req.body.portfolio_manager,
             ticker: req.body.ticker,
-            portfilio: req.body.portfilio,
+            portfolio: req.body.portfolio,
             old_weight: req.body.old_weight,
             new_weight: req.body.new_weight,
             shares_buy_sell: req.body.shares_buy_sell,
@@ -21,6 +21,12 @@ module.exports = function(app) {
             console.log(
               "this is the results: " + JSON.stringify(result.id, null, 2)
             );
+            result.save().then((result) => {
+              console.log("saved")
+            })
+            .catch((err) => {
+              res.json(err);
+            })
             res.json(result);
           })
           .catch(function(err) {
