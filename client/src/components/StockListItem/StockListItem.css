@@ -1,4 +1,4 @@
-.StockListItem {
+/* .StockListItem {
   box-shadow: border-box;
   flex: 0 0 98%;
   list-style: none;
@@ -36,4 +36,9 @@
 .StockListItem > * span{
   color: #757575;
   font-weight: 400;
+} */
+
+.title {
+  font-weight: bold;
+  margin-left: 15px;
 }

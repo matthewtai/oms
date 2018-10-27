@@ -20,8 +20,6 @@
     "nodemon": "^1.11.0"
   },
   "dependencies": {
-    "ag-grid-community": "^19.0.0",
-    "ag-grid-react": "^19.0.0",
     "axios": "^0.16.2",
     "body-parser": "^1.17.2",
     "dotenv": "^6.1.0",
@@ -29,6 +27,7 @@
     "if-env": "^1.0.4",
     "mysql2": "^1.5.3",
     "npm-install-peers": "^1.2.1",
+    "react-scripts": "^2.0.5",
     "sequelize": "^4.38.0"
   }
 }
