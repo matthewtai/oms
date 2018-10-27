@@ -3,6 +3,7 @@ import 'react-table/react-table.css'
 import ReactTable from "react-table";
 
 const StagingTable = (props) =>{
+    
     return(
         <ReactTable
         data={props}

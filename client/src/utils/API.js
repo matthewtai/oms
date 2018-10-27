@@ -13,8 +13,12 @@ export default {
   getQuote: function(query) {
     return axios.get("/api/quote", { params: { symbol: query } });
   },
-  getSearch: function(id) {
-    return axios.get("/api/search");
+  getSearch: function(query) {
+    return axios.get("/api/search", { params: { symbol: query } });
+  },
+
+  getExchange: function(query) {
+    return axios.get("/api/exchange", { params: { currency: query } }); 
   },
   getStaging: function(){
     return axios.get("/api/Staging");
@@ -31,4 +35,3 @@ export default {
   //   return axios.get("/api/search", { params: { endpoint: query } });
   // }
 };
-  
