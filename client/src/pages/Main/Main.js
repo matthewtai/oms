@@ -24,6 +24,7 @@ class Main extends Component {
     data: [],
     tickerName: "",
     currency: "",
+    stagingData : [],
     exchangerate: ""
   };
 
@@ -31,6 +32,7 @@ class Main extends Component {
     this.loadPortfolios();
     //this.performSearch();
     this.handleAlphaApi();
+    this.loadStagingData();
   }
 
   loadUsers = () => {
@@ -59,7 +61,16 @@ class Main extends Component {
     });
   };
 
-  alertSomething = props => {
+  loadStagingData = () => {
+    API.getStaging()
+      .then(res => {
+        this.setState({
+          stagingData: res.data
+        });
+      })
+  }
+
+  alertSomething = (props) =>{
     //event.preventDefault();
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -87,6 +98,7 @@ class Main extends Component {
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
+        //console.log(res.data["Global Quote"]["05. price"]);
         // console.log(res.data["Global Quote"]["05. price"]);
         let stocks = _.flattenDeep(
           Array.from([res.data["Global Quote"]]).map(stock => [
@@ -98,11 +110,11 @@ class Main extends Component {
           ])
         );
         // let stocks = _.flattenDeep([res.data])
-        // console.log(stocks);
+        //console.log(stocks);
         this.setState({
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
-        console.log(this.state.price);
+        //console.log(this.state.price);
         this.setState((state, props) => {
           return {
             ...state,
@@ -273,6 +285,11 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
+          {this.state.stagingData.length? (
+          <StagingTable
+            data={this.state.stagingData}
+          />
+          ):(<h2>Hahahah</h2>)}
         </div>
         {/* <StagingTable/> */}
       </Fabric>
