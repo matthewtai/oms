@@ -16,6 +16,10 @@ export default {
   getSearch: function(query) {
     return axios.get("/api/search", { params: { symbol: query } });
   },
+
+  getExchange: function(query) {
+    return axios.get("/api/exchange", { params: { currency: query } }); 
+  },
   // Deletes the book with the given id
   deleteBook: function(id) {
     return axios.delete("/api/books/" + id);
