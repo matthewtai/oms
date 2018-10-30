@@ -182,14 +182,6 @@ class Main extends Component {
     this.handleAlphaApi(this.state.value);
   };
 
-  //this.handleClick = this.handleClick.bind(this);
-  //handleChange = this.handleChange.bind(this);
-
-  // handleSearchChange= () => {
-  //   this.setState({
-  //     value: this.value
-  //   });
-  // }
 
   handleNewWeightChange = (props, event) => {
     //console.log(props.target.value)
@@ -221,12 +213,13 @@ class Main extends Component {
       old_weight: portfolios[index].old_weight,
       new_weight: portfolios[index].newWeight,
       shares_buy_sell: portfolios[index].shares_buy_sell,
-      buy_or_sell: portfolios[index].portfolio,
+      buy_or_sell: portfolios[index].buy_or_sell,
       ticker_name: this.state.tickerName,
     }
     Axios.post("/api/posts/", save, function(result){
        console.log("main.js results: " + result);
     });
+    window.location.reload(true); // fix this later 
     console.log(this.state.stagingData);
   }
   
@@ -256,7 +249,6 @@ class Main extends Component {
               onSearch={this.handleSubmit}
             />
           </div>
-
           {/* <SearchBar value={ value }
                    onChange={ this.handleSearchChange }
                    onClick={ this.handleSubmit }/> */}
@@ -275,36 +267,39 @@ class Main extends Component {
                     {
                       Header: "ID",
                       id: "id",
-                      accessor: "id"
+                      accessor: "id",
+                      maxWidth: 50
                     },
                     {
                       Header: "Portfolio",
-                      accessor: "portfolio"
+                      accessor: "portfolio",
+                      maxWidth: 200
+                      
                     },
                     {
                       Header: "NAV",
                       accessor: "NAV",
-                      maxWidth: 125
+                      maxWidth: 200
                     },
                     {
                       Header: "Current Cash(%)",
                       accessor: "current_cash",
-                      maxWidth: 125
+                      maxWidth: 200
                     },
                     {
                       Header: "Old Weight(%)",
                       accessor: "old_weight",
-                      maxWidth: 125
+                      maxWidth: 200
                     },
                     {
                       Header: "Shares Owned",
                       accessor: "shares_owned",
-                      maxWidth: 125
+                      maxWidth: 200
                     },
                     {
                       Header: "New Weight(%)",
                       Cell: props => (
-                        <div>
+                        <div> 
                           <input
                             style={{
                               width: '50px',
@@ -315,15 +310,17 @@ class Main extends Component {
                           />
                         </div>
                       ),
-                      maxWidth: 125,
+                      maxWidth: 200,
                     },
                     {
                       Header: "Shares to Buy/Sell",
-                      accessor: "shares_buy_sell"
+                      accessor: "shares_buy_sell",
+                      maxWidth: 200,
                     },
                     {
                       Header: "Buy OR Sell",
-                      accessor: "buy_or_sell"
+                      accessor: "buy_or_sell",
+                      maxWidth: 200,
                     },  
                     {
                       Header: "Save",
@@ -349,13 +346,75 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
-          {/* {this.state.stagingData.length? (
-          <StagingTable
-            data={this.state.stagingData}
+          <br /><br />
+           {this.state.stagingData.length ? (
+            <ReactTable
+              data={this.state.stagingData}
+              columns={[
+                {
+                  //Header: "Name",
+                  columns: [
+                    {
+                      Header: "ID",
+                      id: "id",
+                      accessor: "id",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Ticker",
+                      accessor: "ticker",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Portfolio",
+                      accessor: "portfolio",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Old Weight(%)",
+                      accessor: "old_weight",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "New Weight(%)",
+                      accessor: "new_weight",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Shares to Buy/Sell",
+                      accessor: "shares_buy_sell",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Buy Or Sell",
+                      accessor: "buy_or_sell",
+                      minWidth: 125,
+                    },
+                    {
+                      Header: "Ticker Name",
+                      accessor: "ticker_name",
+                      minWidth: 125,
+                    },  
+                  ]
+                }
+              ]}
+              //defaultPageSize={10}
+              className="-striped -highlight"
+              showPagination={false}
+              defaultPageSize={this.state.stagingData.length}
+            />
+          ) : (
+            <h2>NoData</h2>
+          )}
+
+          <br /><br /><br />
+          {/* {this.state.stagingData.length ? (
+          <StagingTable 
+          data={this.state.stagingData}
           />
           ):(<h2>Hahahah</h2>)} */}
         </div>
-        {/* <StagingTable/> */}
+        {/* <StagingTable/> */}   
       </Fabric>
     );
   };
