@@ -26,7 +26,8 @@ class Main extends Component {
     tickerName: "",
     currency: "",
     stagingData : [],
-    exchangerate: ""
+    exchangerate: "",
+    ticker: "",
   };
 
   componentDidMount() {
@@ -56,6 +57,7 @@ class Main extends Component {
   setupData = data => {
     data.map(element => {
       element.newWeight = 0;
+      // element.changed = false;
     });
     this.setState({
       data: data
@@ -80,13 +82,28 @@ class Main extends Component {
     });
     // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
     // console.log(this.state.price);
-    let newShares =
-      ((portfolios[index].newWeight / 100 -
-        portfolios[index].old_weight / 100) *
-        portfolios[index].NAV) /
-      (this.state.price * this.state.exchangerate);
-    return (portfolios[index].shares_buy_sell = newShares);
+    let weight = portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100
+    this.handleBuyOrSell(index, weight)
+    if(weight < 0){
+        let newShares =  (Math.abs(weight) * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
+        return (portfolios[index].shares_buy_sell = newShares);
+    }else{
+      let newShares =(weight * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell = newShares);
+    }
   };
+
+  handleBuyOrSell = (index, weight) => {
+    const portfolios = this.state.data;
+    let sellOrBuy = "";
+    if(weight < 0){
+      sellOrBuy = "sell"
+      return(portfolios[index].buy_or_sell = sellOrBuy);
+    }else{
+      sellOrBuy = "buy"
+      return(portfolios[index].buy_or_sell = sellOrBuy);
+    }
+  }
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
@@ -113,6 +130,7 @@ class Main extends Component {
         // let stocks = _.flattenDeep([res.data])
         //console.log(stocks);
         this.setState({
+          ticker: res.data["Global Quote"]["01. symbol"],
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
         //console.log(this.state.price);
@@ -181,6 +199,8 @@ class Main extends Component {
     });
     //console.log(event.target.value);
     portfolios[index].newWeight = event.target.value;
+    //come back to this
+    // portfolios[index].changed = true; 
     this.setState({
       data: portfolios
     });
@@ -196,17 +216,18 @@ class Main extends Component {
     });
     const save = {
       portfolio_manager: portfolios[index].portfolio,
-      ticker: portfolios[index].portfolio,
+      ticker: this.state.ticker,
       portfolio: portfolios[index].portfolio,
       old_weight: portfolios[index].old_weight,
       new_weight: portfolios[index].newWeight,
       shares_buy_sell: portfolios[index].shares_buy_sell,
       buy_or_sell: portfolios[index].portfolio,
-      ticker_name: portfolios[index].portfolio,
+      ticker_name: this.state.tickerName,
     }
     Axios.post("/api/posts/", save, function(result){
        console.log("main.js results: " + result);
     });
+    console.log(this.state.stagingData);
   }
   
   getnewWeightValue = props => {
@@ -298,6 +319,10 @@ class Main extends Component {
                       accessor: "shares_buy_sell"
                     },
                     {
+                      Header: "Buy OR Sell",
+                      accessor: "buy_or_sell"
+                    },  
+                    {
                       Header: "Save",
                       Cell: props => (
                         <div>
@@ -321,11 +346,11 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
-          {this.state.stagingData.length? (
+          {/* {this.state.stagingData.length? (
           <StagingTable
             data={this.state.stagingData}
           />
-          ):(<h2>Hahahah</h2>)}
+          ):(<h2>Hahahah</h2>)} */}
         </div>
         {/* <StagingTable/> */}
       </Fabric>
