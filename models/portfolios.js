@@ -8,7 +8,7 @@ module.exports = function(Sequelize, DataTypes) {
       type: DataTypes.STRING
     },
     NAV:{
-      type: DataTypes.DECIMAL
+      type: DataTypes.INTEGER
     },
     cash:{
       type: DataTypes.DECIMAL
@@ -20,10 +20,10 @@ module.exports = function(Sequelize, DataTypes) {
       type: DataTypes.DECIMAL
     },
     shares_owned:{
-      type: DataTypes.DECIMAL
+      type: DataTypes.INTEGER
     },
     shares_buy_sell:{
-      type: DataTypes.DECIMAL
+      type: DataTypes.INTEGER
     }
   },
   {
