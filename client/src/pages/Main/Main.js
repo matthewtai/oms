@@ -86,10 +86,10 @@ class Main extends Component {
     this.handleBuyOrSell(index, weight)
     if(weight < 0){
         let newShares =  (Math.abs(weight) * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-        return (portfolios[index].shares_buy_sell = newShares);
+        return (portfolios[index].shares_buy_sell = Math.round(newShares));
     }else{
       let newShares =(weight * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell = newShares);
+      return (portfolios[index].shares_buy_sell = Math.round(newShares));
     }
   };
 
@@ -283,36 +283,39 @@ class Main extends Component {
                     },
                     {
                       Header: "NAV",
-                      accessor: "NAV"
-                    },
-                    {
-                      Header: "Starting Cash",
-                      accessor: "cash"
+                      accessor: "NAV",
+                      maxWidth: 125
                     },
                     {
                       Header: "Current Cash(%)",
-                      accessor: "current_cash"
+                      accessor: "current_cash",
+                      maxWidth: 125
                     },
                     {
                       Header: "Old Weight(%)",
-                      accessor: "old_weight"
+                      accessor: "old_weight",
+                      maxWidth: 125
                     },
                     {
-                      Header: "New Weight",
+                      Header: "Shares Owned",
+                      accessor: "shares_owned",
+                      maxWidth: 125
+                    },
+                    {
+                      Header: "New Weight(%)",
                       Cell: props => (
                         <div>
                           <input
+                            style={{
+                              width: '50px',
+                            }}
                             className="number"
                             value={this.getnewWeightValue(props)}
                             onChange={e => this.handleNewWeightChange(props, e)}
                           />
                         </div>
                       ),
-                      minWidth: 200
-                    },
-                    {
-                      Header: "Shares Owned",
-                      accessor: "shares_owned"
+                      maxWidth: 125,
                     },
                     {
                       Header: "Shares to Buy/Sell",

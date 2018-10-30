@@ -26,7 +26,7 @@ INSERT INTO portfolios (portfolio, mandate, NAV, cash) VALUES ("Portfolio 23", "
 
 USE omsDB;
 
-ALTER TABLE portfolios ADD COLUMN shares_buy_sell INT(100);
-ALTER TABLE portfolios ADD COLUMN old_weight INT DEFAULT 0;
-ALTER TABLE portfolios ADD COLUMN current_cash INT(100) DEFAULT 2;
+ALTER TABLE portfolios ADD COLUMN shares_buy_sell INT(100) DEFAULT 0;
+ALTER TABLE portfolios ADD COLUMN old_weight DECIMAL(3, 2) DEFAULT 0.00;
+ALTER TABLE portfolios ADD COLUMN current_cash DECIMAL(3, 2) DEFAULT 2.00;
 ALTER TABLE portfolios ADD COLUMN shares_owned INT(100) DEFAULT 0;
