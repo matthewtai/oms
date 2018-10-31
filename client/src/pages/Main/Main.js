@@ -13,6 +13,8 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
+import SaveBtn from "../../components/saveBtn/saveBtn";
+import DeleteBtn from "../../components/DeleteBtn";
 
 initializeIcons();
 
@@ -56,8 +58,8 @@ class Main extends Component {
 
   setupData = data => {
     data.map(element => {
-      element.newWeight = 0;
-      // element.changed = false;
+      element.newWeight = '';
+      element.changed = false;
     });
     this.setState({
       data: data
@@ -74,6 +76,14 @@ class Main extends Component {
       })
   }
 
+  deleteStaging = (props) => {
+    console.log(props.original.id);
+    API.deleteStagingRow(props.original.id)
+      .then(res => {
+        this.loadStagingData();
+        
+      })
+  }
   alertSomething = (props) =>{
     //event.preventDefault();
     const portfolios = this.state.data;
@@ -86,10 +96,10 @@ class Main extends Component {
     this.handleBuyOrSell(index, weight)
     if(weight < 0){
         let newShares =  (Math.abs(weight) * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-        return (portfolios[index].shares_buy_sell = Math.round(newShares));
+        return (portfolios[index].shares_buy_sell = Math.round(newShares) /100 * 100);
     }else{
       let newShares =(weight * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell = Math.round(newShares));
+      return (portfolios[index].shares_buy_sell = Math.round(newShares / 100) * 100);
     }
   };
 
@@ -97,22 +107,16 @@ class Main extends Component {
     const portfolios = this.state.data;
     let sellOrBuy = "";
     if(weight < 0){
-      sellOrBuy = "sell"
+      sellOrBuy = "Sell"
       return(portfolios[index].buy_or_sell = sellOrBuy);
     }else{
-      sellOrBuy = "buy"
+      sellOrBuy = "Buy"
       return(portfolios[index].buy_or_sell = sellOrBuy);
     }
   }
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
-  // handleSaveStages = () => {
-  //   const portfolios = this.state
-  //   const index = portfolios.findIndex((element) => {
-  //     return element.id === props.row.id;
-  //   });
-  
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
@@ -192,7 +196,7 @@ class Main extends Component {
     //console.log(event.target.value);
     portfolios[index].newWeight = event.target.value;
     //come back to this
-    // portfolios[index].changed = true; 
+    portfolios[index].changed = true; 
     this.setState({
       data: portfolios
     });
@@ -200,27 +204,37 @@ class Main extends Component {
   };
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
-
-  handleSaveStages = (props) => {
+  handleStageSubmit = () => {
     const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
+
+    // for(i=0; i<portfolios.length; i++){
+    //   if(portfolios[i].changed)
+    //   this.handleSaveStages(portfolios[i])
+    // }
+    portfolios.map(element => {
+      if(element.changed){
+        this.handleSaveStages(element);
+      }
     });
+  }
+
+  handleSaveStages = (data) => {
     const save = {
-      portfolio_manager: portfolios[index].portfolio,
+      portfolio_manager: data.portfolio,
       ticker: this.state.ticker,
-      portfolio: portfolios[index].portfolio,
-      old_weight: portfolios[index].old_weight,
-      new_weight: portfolios[index].newWeight,
-      shares_buy_sell: portfolios[index].shares_buy_sell,
-      buy_or_sell: portfolios[index].buy_or_sell,
+      portfolio: data.portfolio,
+      old_weight: data.old_weight,
+      new_weight: data.newWeight,
+      shares_buy_sell: data.shares_buy_sell,
+      buy_or_sell: data.buy_or_sell,
       ticker_name: this.state.tickerName,
     }
-    Axios.post("/api/posts/", save, function(result){
-       console.log("main.js results: " + result);
-    });
-    window.location.reload(true); // fix this later 
-    console.log(this.state.stagingData);
+    API.postStagingData(save).then(res => {
+      this.loadStagingData();
+      this.loadPortfolios();
+    })
+    .catch(err => console.log(err));
+    //console.log(this.state.stagingData);
   }
   
   getnewWeightValue = props => {
@@ -252,6 +266,9 @@ class Main extends Component {
           {/* <SearchBar value={ value }
                    onChange={ this.handleSearchChange }
                    onClick={ this.handleSubmit }/> */}
+          <SaveBtn 
+            handleStageSubmit = {this.handleStageSubmit}
+          />
           <StockList
             currency={this.state.currency}
             tickerName={this.state.tickerName}
@@ -299,8 +316,9 @@ class Main extends Component {
                     {
                       Header: "New Weight(%)",
                       Cell: props => (
-                        <div> 
+                        <div>
                           <input
+                           type="text" id="input1" placeholder="%"
                             style={{
                               width: '50px',
                             }}
@@ -322,19 +340,19 @@ class Main extends Component {
                       accessor: "buy_or_sell",
                       maxWidth: 200,
                     },  
-                    {
-                      Header: "Save",
-                      Cell: props => (
-                        <div>
-                          <button 
-                               onClick={()=>this.handleSaveStages(props)}
-                              >
-                              Save
-                            </button>
-                        </div>
-                      ),
-                      minWidth: 50
-                    }
+                    // {
+                    //   Header: "Save",
+                    //   Cell: props => (
+                    //     <div>
+                    //       <button 
+                    //            onClick={()=>this.handleSaveStages(props)}
+                    //           >
+                    //           Save
+                    //         </button>
+                    //     </div>
+                    //   ),
+                    //   minWidth: 50
+                    // }
                   ]
                 }
               ]}
@@ -395,13 +413,19 @@ class Main extends Component {
                       accessor: "ticker_name",
                       minWidth: 125,
                     },  
+                    {
+                      Header: "Delete",
+                      Cell: props => (
+                        <DeleteBtn onClick={() => this.deleteStaging(props)} />
+                      )
+                    }
                   ]
                 }
               ]}
               //defaultPageSize={10}
               className="-striped -highlight"
               showPagination={false}
-              defaultPageSize={this.state.stagingData.length}
+              pageSize={this.state.stagingData.length}
             />
           ) : (
             <h2>NoData</h2>
