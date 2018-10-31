@@ -13,6 +13,7 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
+import SaveBtn from "../../components/saveBtn/saveBtn"
 
 initializeIcons();
 
@@ -57,7 +58,7 @@ class Main extends Component {
   setupData = data => {
     data.map(element => {
       element.newWeight = 0;
-      // element.changed = false;
+      element.changed = false;
     });
     this.setState({
       data: data
@@ -107,12 +108,6 @@ class Main extends Component {
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
-  // handleSaveStages = () => {
-  //   const portfolios = this.state
-  //   const index = portfolios.findIndex((element) => {
-  //     return element.id === props.row.id;
-  //   });
-  
   performSearch = query => {
     API.getQuote(query)
       .then(res => {
@@ -192,7 +187,7 @@ class Main extends Component {
     //console.log(event.target.value);
     portfolios[index].newWeight = event.target.value;
     //come back to this
-    // portfolios[index].changed = true; 
+    portfolios[index].changed = true; 
     this.setState({
       data: portfolios
     });
@@ -200,20 +195,33 @@ class Main extends Component {
   };
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
-
-  handleSaveStages = (props) => {
+  handleStageSubmit = () => {
     const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
+
+    // for(i=0; i<portfolios.length; i++){
+    //   if(portfolios[i].changed)
+    //   this.handleSaveStages(portfolios[i])
+    // }
+    portfolios.map(element => {
+      if(element.changed){
+        this.handleSaveStages(element);
+      }
     });
+  }
+
+  handleSaveStages = (data) => {
+    // const portfolios = this.state.data;
+    // const index = portfolios.findIndex(element => {
+    //   return element.id === props.row.id;
+    // });
     const save = {
-      portfolio_manager: portfolios[index].portfolio,
+      portfolio_manager: data.portfolio,
       ticker: this.state.ticker,
-      portfolio: portfolios[index].portfolio,
-      old_weight: portfolios[index].old_weight,
-      new_weight: portfolios[index].newWeight,
-      shares_buy_sell: portfolios[index].shares_buy_sell,
-      buy_or_sell: portfolios[index].buy_or_sell,
+      portfolio: data.portfolio,
+      old_weight: data.old_weight,
+      new_weight: data.newWeight,
+      shares_buy_sell: data.shares_buy_sell,
+      buy_or_sell: data.buy_or_sell,
       ticker_name: this.state.tickerName,
     }
     Axios.post("/api/posts/", save, function(result){
@@ -252,6 +260,9 @@ class Main extends Component {
           {/* <SearchBar value={ value }
                    onChange={ this.handleSearchChange }
                    onClick={ this.handleSubmit }/> */}
+          <SaveBtn 
+            handleStageSubmit = {this.handleStageSubmit}
+          />
           <StockList
             currency={this.state.currency}
             tickerName={this.state.tickerName}
@@ -322,19 +333,19 @@ class Main extends Component {
                       accessor: "buy_or_sell",
                       maxWidth: 200,
                     },  
-                    {
-                      Header: "Save",
-                      Cell: props => (
-                        <div>
-                          <button 
-                               onClick={()=>this.handleSaveStages(props)}
-                              >
-                              Save
-                            </button>
-                        </div>
-                      ),
-                      minWidth: 50
-                    }
+                    // {
+                    //   Header: "Save",
+                    //   Cell: props => (
+                    //     <div>
+                    //       <button 
+                    //            onClick={()=>this.handleSaveStages(props)}
+                    //           >
+                    //           Save
+                    //         </button>
+                    //     </div>
+                    //   ),
+                    //   minWidth: 50
+                    // }
                   ]
                 }
               ]}
