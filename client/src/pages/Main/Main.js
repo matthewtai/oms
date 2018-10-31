@@ -86,10 +86,10 @@ class Main extends Component {
     this.handleBuyOrSell(index, weight)
     if(weight < 0){
         let newShares =  (Math.abs(weight) * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-        return (portfolios[index].shares_buy_sell = Math.round(newShares));
+        return (portfolios[index].shares_buy_sell = Math.round(newShares) * 100);
     }else{
       let newShares =(weight * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell = Math.round(newShares));
+      return (portfolios[index].shares_buy_sell = Math.round(newShares / 100) * 100);
     }
   };
 
