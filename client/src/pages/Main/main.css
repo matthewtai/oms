@@ -22,3 +22,26 @@
   margin-top: 2.5rem;
   
   }
+
+  .text-input{
+   
+    position: relative;
+    margin-top: 50px;
+  }
+
+  input[type="text"]{
+      box-sizing: border-box;
+      outline: none;
+      text-align: center;
+      border: 1px solid lightgray;
+      border-radius: 3px;
+      /* padding: 10px 10px 10px 100px; */
+    }
+    
+
+    input[type="text"]:focus{
+      padding: 10px;
+      transition: all 0.1s ease-out;
+      transition-delay: 0.1s;
+    }
+  
