@@ -210,10 +210,6 @@ class Main extends Component {
   }
 
   handleSaveStages = (data) => {
-    // const portfolios = this.state.data;
-    // const index = portfolios.findIndex(element => {
-    //   return element.id === props.row.id;
-    // });
     const save = {
       portfolio_manager: data.portfolio,
       ticker: this.state.ticker,
