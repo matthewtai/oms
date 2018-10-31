@@ -7,26 +7,30 @@ module.exports = function(app) {
         })
     });
 
-    app.post("/api/posts", function(req, res){
-        db.Stages.create({
-            portfolio_manager: req.body.portfolio_manager,
-            ticker: req.body.ticker,
-            portfolio: req.body.portfolio,
-            old_weight: req.body.old_weight,
-            new_weight: req.body.new_weight,
-            shares_buy_sell: req.body.shares_buy_sell,
-            buy_or_sell: req.body.buy_or_sell,
-            ticker_name: req.body.ticker_name
-        }).then(function(result) {
-            console.log(
-              "this is the results: " + JSON.stringify(result.id, null, 2)
-            );
-            result.save().then((result) => {
-              console.log("saved")
-            })
-            .catch((err) => {
-              res.json(err);
-            })
+    app.post("/api/Staging/post", function(req, res){
+      // console.log(req.body.portfolio);
+      // console.log("hahaha");
+        db.Stages.create(req.body
+        //   {
+        //     portfolio_manager: req.body.portfolio_manager,
+        //     ticker: req.body.ticker,
+        //     portfolio: req.body.portfolio,
+        //     old_weight: req.body.old_weight,
+        //     new_weight: req.body.new_weight,
+        //     shares_buy_sell: req.body.shares_buy_sell,
+        //     buy_or_sell: req.body.buy_or_sell,
+        //     ticker_name: req.body.ticker_name
+        // }
+        ).then(function(result) {
+            // console.log(
+            //   "this is the results: " + JSON.stringify(result.id, null, 2)
+            // );
+            // result.save().then((result) => {
+            //   console.log("saved")
+            // })
+            // .catch((err) => {
+            //   res.json(err);
+            // })
             res.json(result);
           })
           .catch(function(err) {
@@ -34,17 +38,16 @@ module.exports = function(app) {
           });
     }); 
 
-    app.delete("/api/posts/", function(req, res) {
+    app.delete("/api/Staging/delete/:id", function(req, res) {
         db.Stages.destroy({
           where: {
-            id: req.body.id
+            id: req.params.id
           }
         })
           .then(function(result) {
             res.json(result);
           });
-      });    
-    
+      });     
 }
 
 // db.Stages.create(req.body

@@ -13,7 +13,8 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
-import SaveBtn from "../../components/saveBtn/saveBtn"
+import SaveBtn from "../../components/saveBtn/saveBtn";
+import DeleteBtn from "../../components/DeleteBtn";
 
 initializeIcons();
 
@@ -75,6 +76,14 @@ class Main extends Component {
       })
   }
 
+  deleteStaging = (props) => {
+    console.log(props.original.id);
+    API.deleteStagingRow(props.original.id)
+      .then(res => {
+        this.loadStagingData();
+        
+      })
+  }
   alertSomething = (props) =>{
     //event.preventDefault();
     const portfolios = this.state.data;
@@ -220,11 +229,12 @@ class Main extends Component {
       buy_or_sell: data.buy_or_sell,
       ticker_name: this.state.tickerName,
     }
-    Axios.post("/api/posts/", save, function(result){
-       console.log("main.js results: " + result);
-    });
-    window.location.reload(true); // fix this later 
-    console.log(this.state.stagingData);
+    API.postStagingData(save).then(res => {
+      this.loadStagingData();
+      this.loadPortfolios();
+    })
+    .catch(err => console.log(err));
+    //console.log(this.state.stagingData);
   }
   
   getnewWeightValue = props => {
@@ -402,13 +412,19 @@ class Main extends Component {
                       accessor: "ticker_name",
                       minWidth: 125,
                     },  
+                    {
+                      Header: "Delete",
+                      Cell: props => (
+                        <DeleteBtn onClick={() => this.deleteStaging(props)} />
+                      )
+                    }
                   ]
                 }
               ]}
               //defaultPageSize={10}
               className="-striped -highlight"
               showPagination={false}
-              defaultPageSize={this.state.stagingData.length}
+              pageSize={this.state.stagingData.length}
             />
           ) : (
             <h2>NoData</h2>
