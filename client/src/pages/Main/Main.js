@@ -58,7 +58,7 @@ class Main extends Component {
 
   setupData = data => {
     data.map(element => {
-      element.newWeight = 0;
+      element.newWeight = '';
       element.changed = false;
     });
     this.setState({
@@ -107,10 +107,10 @@ class Main extends Component {
     const portfolios = this.state.data;
     let sellOrBuy = "";
     if(weight < 0){
-      sellOrBuy = "sell"
+      sellOrBuy = "Sell"
       return(portfolios[index].buy_or_sell = sellOrBuy);
     }else{
-      sellOrBuy = "buy"
+      sellOrBuy = "Buy"
       return(portfolios[index].buy_or_sell = sellOrBuy);
     }
   }
@@ -316,8 +316,9 @@ class Main extends Component {
                     {
                       Header: "New Weight(%)",
                       Cell: props => (
-                        <div> 
+                        <div>
                           <input
+                           type="text" id="input1" placeholder="%"
                             style={{
                               width: '50px',
                             }}
