@@ -29,6 +29,9 @@ export default {
   },
   postStagingData: function(stagingData){
     return axios.post("/api/Staging/post", stagingData);
+  },
+  postingLoginData: function(postingData){
+    return axios.post("login/api/accounts", postingData);
   }
   // // Saves a book to the database
   // saveBook: function(bookData) {

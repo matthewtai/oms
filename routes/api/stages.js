@@ -11,16 +11,7 @@ module.exports = function(app) {
       // console.log(req.body.portfolio);
       // console.log("hahaha");
         db.Stages.create(req.body
-        //   {
-        //     portfolio_manager: req.body.portfolio_manager,
-        //     ticker: req.body.ticker,
-        //     portfolio: req.body.portfolio,
-        //     old_weight: req.body.old_weight,
-        //     new_weight: req.body.new_weight,
-        //     shares_buy_sell: req.body.shares_buy_sell,
-        //     buy_or_sell: req.body.buy_or_sell,
-        //     ticker_name: req.body.ticker_name
-        // }
+
         ).then(function(result) {
             // console.log(
             //   "this is the results: " + JSON.stringify(result.id, null, 2)

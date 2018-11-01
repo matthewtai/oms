@@ -46,7 +46,7 @@ module.exports = function(Sequelize, DataTypes) {
         }
       }
     }
-  });
+    });
 
   // User.associate = function(radixDB) {
   //   User.hasMany(radixDB.Task, {
