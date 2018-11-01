@@ -354,7 +354,7 @@ class Main extends Component {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
                       maxWidth: 200,
-                    },  
+                    },
                   ]
                 }
               ]}
