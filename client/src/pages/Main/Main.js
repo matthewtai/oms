@@ -27,9 +27,9 @@ class Main extends Component {
     data: [],
     tickerName: "",
     currency: "",
-    stagingData : [],
+    stagingData: [],
     exchangerate: "",
-    ticker: "",
+    ticker: ""
   };
 
   componentDidMount() {
@@ -58,7 +58,7 @@ class Main extends Component {
 
   setupData = data => {
     data.map(element => {
-      element.newWeight = '';
+      element.newWeight = "";
       element.changed = false;
     });
     this.setState({
@@ -67,24 +67,21 @@ class Main extends Component {
   };
 
   loadStagingData = () => {
-    API.getStaging()
-      .then(res => {
-        console.log(res);
-        this.setState({
-          stagingData: res.data
-        });
-      })
-  }
+    API.getStaging().then(res => {
+      console.log(res);
+      this.setState({
+        stagingData: res.data
+      });
+    });
+  };
 
-  deleteStaging = (props) => {
+  deleteStaging = props => {
     console.log(props.original.id);
-    API.deleteStagingRow(props.original.id)
-      .then(res => {
-        this.loadStagingData();
-        
-      })
-  }
-  alertSomething = (props) =>{
+    API.deleteStagingRow(props.original.id).then(res => {
+      this.loadStagingData();
+    });
+  };
+  alertSomething = props => {
     //event.preventDefault();
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -92,28 +89,35 @@ class Main extends Component {
     });
     // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
     // console.log(this.state.price);
-    let weight = portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100
-    this.handleBuyOrSell(index, weight)
-    if(weight < 0){
-        let newShares =  (Math.abs(weight) * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-        return (portfolios[index].shares_buy_sell = Math.round(newShares) /100 * 100);
-    }else{
-      let newShares =(weight * portfolios[index].NAV) / (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell = Math.round(newShares / 100) * 100);
+    let weight =
+      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
+    this.handleBuyOrSell(index, weight);
+    if (weight < 0) {
+      let newShares =
+        (Math.abs(weight) * portfolios[index].NAV) /
+        (this.state.price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
+    } else {
+      let newShares =
+        (weight * portfolios[index].NAV) /
+        (this.state.price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
     }
   };
 
   handleBuyOrSell = (index, weight) => {
     const portfolios = this.state.data;
     let sellOrBuy = "";
-    if(weight < 0){
-      sellOrBuy = "Sell"
-      return(portfolios[index].buy_or_sell = sellOrBuy);
-    }else{
-      sellOrBuy = "Buy"
-      return(portfolios[index].buy_or_sell = sellOrBuy);
+    if (weight < 0) {
+      sellOrBuy = "Sell";
+      return (portfolios[index].buy_or_sell = sellOrBuy);
+    } else {
+      sellOrBuy = "Buy";
+      return (portfolios[index].buy_or_sell = sellOrBuy);
     }
-  }
+  };
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
 
@@ -148,7 +152,6 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
- 
   handleAlphaApi = query => {
     API.getSearch(query)
       .then(res => {
@@ -160,7 +163,7 @@ class Main extends Component {
           currency: namecurrency[0]["8. currency"]
         });
         console.log(this.state.currency);
-        this.handleAlphaApiCurrency(this.state.currency)
+        this.handleAlphaApiCurrency(this.state.currency);
       })
       .catch(err => console.log(err));
   };
@@ -170,11 +173,12 @@ class Main extends Component {
       .then(res => {
         console.log(res);
 
-        const exchangerate = _.flattenDeep([res.data["Realtime Currency Exchange Rate"]]);
+        const exchangerate = _.flattenDeep([
+          res.data["Realtime Currency Exchange Rate"]
+        ]);
         // console.log(exchangerate[0]["5. Exchange Rate"])
         this.setState({
-          exchangerate: exchangerate[0]["5. Exchange Rate"],
-          
+          exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
         console.log(this.state.exchangerate);
       })
@@ -186,7 +190,6 @@ class Main extends Component {
     this.handleAlphaApi(this.state.value);
   };
 
-
   handleNewWeightChange = (props, event) => {
     //console.log(props.target.value)
     const portfolios = this.state.data;
@@ -196,7 +199,7 @@ class Main extends Component {
     //console.log(event.target.value);
     portfolios[index].newWeight = event.target.value;
     //come back to this
-    portfolios[index].changed = true; 
+    portfolios[index].changed = true;
     this.setState({
       data: portfolios
     });
@@ -207,13 +210,13 @@ class Main extends Component {
   handleStageSubmit = () => {
     const portfolios = this.state.data;
     portfolios.map(element => {
-      if(element.changed){
+      if (element.changed) {
         this.handleSaveStages(element);
       }
     });
-  }
+  };
 
-  handleSaveStages = (data) => {
+  handleSaveStages = data => {
     const save = {
       portfolio_manager: data.portfolio,
       ticker: this.state.ticker,
@@ -222,16 +225,17 @@ class Main extends Component {
       new_weight: data.newWeight,
       shares_buy_sell: data.shares_buy_sell,
       buy_or_sell: data.buy_or_sell,
-      ticker_name: this.state.tickerName,
-    }
-    API.postStagingData(save).then(res => {
-      this.loadStagingData();
-      this.loadPortfolios();
-    })
-    .catch(err => console.log(err));
+      ticker_name: this.state.tickerName
+    };
+    API.postStagingData(save)
+      .then(res => {
+        this.loadStagingData();
+        this.loadPortfolios();
+      })
+      .catch(err => console.log(err));
     //console.log(this.state.stagingData);
-  }
-  
+  };
+
   getnewWeightValue = props => {
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -239,7 +243,7 @@ class Main extends Component {
     });
     // console.log(index)
     return portfolios[index].newWeight;
-  }
+  };
 
   render = () => {
     //console.log(this.state.data.length);
@@ -247,31 +251,37 @@ class Main extends Component {
     return (
       <Fabric>
         <div className="App">
-          <div className="SearchBar">
-            <SearchBox
-              placeholder="Ticker"
-              onChange={value =>
-                this.setState({
-                  value: value
-                })
-              }
-              onSearch={this.handleSubmit}
-            />
-          </div>
-          {/* <SearchBar value={ value }
+          <div className="top">
+            <div className="SearchBar">
+              <SearchBox
+                placeholder="Ticker"
+                onChange={value =>
+                  this.setState({
+                    value: value
+                  })
+                }
+                onSearch={this.handleSubmit}
+              />
+            </div>
+
+            {/* <SearchBar value={ value }
                    onChange={ this.handleSearchChange }
                    onClick={ this.handleSubmit }/> */}
-          <SaveBtn 
-            handleStageSubmit = {this.handleStageSubmit}
-          />
-          <StockList
-            currency={this.state.currency}
-            tickerName={this.state.tickerName}
-            stockItems={this.state.stocks}
-          />
+            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+
+            <StockList
+              currency={this.state.currency}
+              tickerName={this.state.tickerName}
+              stockItems={this.state.stocks}
+            />
+          </div>
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
+              filterable
+              defaultFilterMethod={(filter, row) =>
+                String(row[filter.id]) === filter.value
+              }
               columns={[
                 {
                   //Header: "Name",
@@ -280,42 +290,51 @@ class Main extends Component {
                       Header: "ID",
                       id: "id",
                       accessor: "id",
-                      maxWidth: 50
+                      show: false
                     },
                     {
                       Header: "Portfolio",
                       accessor: "portfolio",
-                      maxWidth: 200
-                      
+                      maxWidth: 200,
+                      filterMethod: (filter, row) =>
+                        row[filter.id].startsWith(filter.value) &&
+                        row[filter.id].endsWith(filter.value)
                     },
                     {
                       Header: "NAV",
                       accessor: "NAV",
+                      filterable: false,
                       maxWidth: 200
                     },
                     {
                       Header: "Current Cash(%)",
                       accessor: "current_cash",
+                      filterable: false,
                       maxWidth: 200
                     },
                     {
                       Header: "Old Weight(%)",
                       accessor: "old_weight",
+                      filterable: false,
                       maxWidth: 200
                     },
                     {
                       Header: "Shares Owned",
                       accessor: "shares_owned",
+                      filterable: false,
                       maxWidth: 200
                     },
                     {
                       Header: "New Weight(%)",
+                      filterable: false,
                       Cell: props => (
                         <div>
                           <input
-                           type="text" id="input1" placeholder="%"
+                            type="text"
+                            id="input1"
+                            placeholder="%"
                             style={{
-                              width: '50px',
+                              width: "50px"
                             }}
                             className="number"
                             value={this.getnewWeightValue(props)}
@@ -323,18 +342,38 @@ class Main extends Component {
                           />
                         </div>
                       ),
-                      maxWidth: 200,
+                      maxWidth: 200
                     },
                     {
                       Header: "Shares to Buy/Sell",
                       accessor: "shares_buy_sell",
-                      maxWidth: 200,
+                      filterable: false,
+                      maxWidth: 200
                     },
                     {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
+<<<<<<< HEAD
                       maxWidth: 200,
                     },  
+=======
+                      filterable: false,
+                      maxWidth: 200
+                    }
+                    // {
+                    //   Header: "Save",
+                    //   Cell: props => (
+                    //     <div>
+                    //       <button
+                    //            onClick={()=>this.handleSaveStages(props)}
+                    //           >
+                    //           Save
+                    //         </button>
+                    //     </div>
+                    //   ),
+                    //   minWidth: 50
+                    // }
+>>>>>>> a671e902f456c0d9542168d9fad3d5c1486e191a
                   ]
                 }
               ]}
@@ -346,8 +385,9 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
-          <br /><br />
-           {this.state.stagingData.length ? (
+          <br />
+          <br />
+          {this.state.stagingData.length ? (
             <ReactTable
               data={this.state.stagingData}
               columns={[
@@ -358,7 +398,7 @@ class Main extends Component {
                       Header: "ID",
                       id: "id",
                       accessor: "id",
-                      minWidth: 125
+                      minWidth: 0
                     },
                     {
                       Header: "Ticker",
@@ -388,13 +428,13 @@ class Main extends Component {
                     {
                       Header: "Buy Or Sell",
                       accessor: "buy_or_sell",
-                      minWidth: 125,
+                      minWidth: 125
                     },
                     {
                       Header: "Ticker Name",
                       accessor: "ticker_name",
-                      minWidth: 125,
-                    },  
+                      minWidth: 125
+                    },
                     {
                       Header: "Delete",
                       Cell: props => (
@@ -413,14 +453,16 @@ class Main extends Component {
             <h2>NoData</h2>
           )}
 
-          <br /><br /><br />
+          <br />
+          <br />
+          <br />
           {/* {this.state.stagingData.length ? (
           <StagingTable 
           data={this.state.stagingData}
           />
           ):(<h2>Hahahah</h2>)} */}
         </div>
-        {/* <StagingTable/> */}   
+        {/* <StagingTable/> */}
       </Fabric>
     );
   };
