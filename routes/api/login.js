@@ -4,8 +4,9 @@ var db = require("../../models");
 
 module.exports = function(app) {
 
-    app.post("login/accounts", function(req,res){
-        db.Users.findOne({
+    app.post("/api/login/accounts", function(req,res){
+        console.log("hello");
+        db.User.findOne({
             where: {
                 username: req.body.userName,
                 password: req.body.password

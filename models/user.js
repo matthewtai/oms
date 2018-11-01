@@ -46,6 +46,9 @@ module.exports = function(Sequelize, DataTypes) {
         }
       }
     }
+    },
+    {
+      timestamps: false
     });
 
   // User.associate = function(radixDB) {

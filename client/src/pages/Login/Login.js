@@ -39,20 +39,22 @@ export default class Login extends Component {
 
   handleLogin = () => {
     const userInput = {
-      userName: this.state.userName,
+      username: this.state.userName,
       password: this.state.password
     };
-    Axios.post("login/accounts", userInput, function(data) {
-      console.log(data);
-      if (data !== null) {
-        sessionStorage.id = data.id;
+    console.log(userInput);
+    API.postingLoginData(userInput).then( res => {
+      console.log(res);
+      if (res !== null) {
+        sessionStorage.id = res.id;
         console.log(sessionStorage.id);
-        window.location.href = "/";
+        window.location.href = "/oms";
       } else {
         console.log(`does not work`)
       }
-      console.log(data);
-    });
+      console.log(res);
+    }) 
+      .catch(err => console.log(err));
   }
 
   render() {
