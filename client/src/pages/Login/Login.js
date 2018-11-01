@@ -39,13 +39,13 @@ export default class Login extends Component {
 
   handleLogin = () => {
     const userInput = {
-      username: this.state.userName,
+      userName: this.state.userName,
       password: this.state.password
     };
     console.log(userInput);
     API.postingLoginData(userInput).then( res => {
       console.log(res);
-      if (res !== null) {
+      if (res.data !== null) {
         sessionStorage.id = res.id;
         console.log(sessionStorage.id);
         window.location.href = "/oms";
