@@ -15,7 +15,7 @@ import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
 import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
-
+import loginBtn from "../../components/LoginBtn"
 initializeIcons();
 
 class Main extends Component {
@@ -209,11 +209,6 @@ class Main extends Component {
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
   handleStageSubmit = () => {
     const portfolios = this.state.data;
-
-    // for(i=0; i<portfolios.length; i++){
-    //   if(portfolios[i].changed)
-    //   this.handleSaveStages(portfolios[i])
-    // }
     portfolios.map(element => {
       if (element.changed) {
         this.handleSaveStages(element);
@@ -358,6 +353,10 @@ class Main extends Component {
                     {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
+<<<<<<< HEAD
+                      maxWidth: 200,
+                    },  
+=======
                       filterable: false,
                       maxWidth: 200
                     }
@@ -374,6 +373,7 @@ class Main extends Component {
                     //   ),
                     //   minWidth: 50
                     // }
+>>>>>>> a671e902f456c0d9542168d9fad3d5c1486e191a
                   ]
                 }
               ]}

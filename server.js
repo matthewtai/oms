@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === "production") {
 require("./routes/api/users")(app);
 require("./routes/api/portfolios")(app);
 require("./routes/api/stages")(app);
+require("./routes/api/login")(app)
 // require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
 app.use("/api", apiRoutes);
@@ -31,7 +32,7 @@ if (process.env.NODE_ENV === "test") {
 }
 
 db.sequelize.sync(syncOptions).then(function() {
-  app.listen(PORT, function() {
+  app.listen(PORT,function() {
     console.log(
       "==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.",
       PORT,
