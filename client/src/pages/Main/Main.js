@@ -379,7 +379,7 @@ class Main extends Component {
                       Header: "ID",
                       id: "id",
                       accessor: "id",
-                      minWidth: 0
+                      show: false
                     },
                     {
                       Header: "Ticker",
