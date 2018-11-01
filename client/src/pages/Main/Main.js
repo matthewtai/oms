@@ -353,10 +353,6 @@ class Main extends Component {
                     {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
-<<<<<<< HEAD
-                      maxWidth: 200,
-                    },  
-=======
                       filterable: false,
                       maxWidth: 200
                     }
@@ -373,7 +369,6 @@ class Main extends Component {
                     //   ),
                     //   minWidth: 50
                     // }
->>>>>>> a671e902f456c0d9542168d9fad3d5c1486e191a
                   ]
                 }
               ]}

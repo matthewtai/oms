@@ -18,7 +18,8 @@ if (process.env.NODE_ENV === "production") {
 require("./routes/api/users")(app);
 require("./routes/api/portfolios")(app);
 require("./routes/api/stages")(app);
-require("./routes/api/login")(app)
+require("./routes/api/login")(app);
+require("./routes/api/holdings")(app);
 // require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
 app.use("/api", apiRoutes);
