@@ -353,22 +353,8 @@ class Main extends Component {
                     {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
-                      filterable: false,
-                      maxWidth: 200
-                    }
-                    // {
-                    //   Header: "Save",
-                    //   Cell: props => (
-                    //     <div>
-                    //       <button
-                    //            onClick={()=>this.handleSaveStages(props)}
-                    //           >
-                    //           Save
-                    //         </button>
-                    //     </div>
-                    //   ),
-                    //   minWidth: 50
-                    // }
+                      maxWidth: 200,
+                    },
                   ]
                 }
               ]}
