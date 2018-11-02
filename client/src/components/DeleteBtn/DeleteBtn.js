@@ -5,7 +5,7 @@ import "./DeleteBtn.css";
 // That way we don't have to define them all individually
 const DeleteBtn = props => (
   <button className="delete-btn" {...props}>
-   <i class="ms-Icon ms-Icon--Delete" aria-hidden="true"></i>
+   <i className="ms-Icon ms-Icon--Delete" aria-hidden="true"></i>
   </button>
 );
 
