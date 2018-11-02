@@ -1,13 +1,19 @@
 .card {
-    width: 18rem;
+  width: 18rem;
 }
-body{
-    font-family: 'Nunito Sans', sans-serif;
+body {
+  font-family: "Nunito Sans", sans-serif;
+  color: rgb(0, 135, 182);
 }
 .centered {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    /* bring your own prefixes */
-    transform: translate(-50%, -50%);
-  }
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  /* bring your own prefixes */
+  transform: translate(-50%, -50%);
+}
+
+.logo {
+  width: 100%;
+  margin-bottom: 8rem;
+}

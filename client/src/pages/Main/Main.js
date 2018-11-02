@@ -15,7 +15,8 @@ import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
 import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
-import loginBtn from "../../components/LoginBtn"
+import logo from "../Login/img/barlogo-01.png";
+import loginBtn from "../../components/LoginBtn";
 initializeIcons();
 
 class Main extends Component {
@@ -85,11 +86,11 @@ class Main extends Component {
   };
 
   handlePortfolioManager = () => {
-    const manager = sessionStorage.name
+    const manager = sessionStorage.name;
     this.setState({
       portfolio_manager: manager
     });
-  }
+  };
 
   alertSomething = props => {
     //event.preventDefault();
@@ -237,7 +238,7 @@ class Main extends Component {
       buy_or_sell: data.buy_or_sell,
       ticker_name: this.state.tickerName
     };
-    console.log("this is : " + this.state.portfolio_manager)
+    console.log("this is : " + this.state.portfolio_manager);
     API.postStagingData(save)
       .then(res => {
         this.loadStagingData();
@@ -262,6 +263,9 @@ class Main extends Component {
       <Fabric>
         <div className="App">
           <div className="top">
+            <div className="logomain">
+              <img className="logosmain" alt="icon" src={logo} />
+            </div>
             <div className="SearchBar">
               <SearchBox
                 placeholder="Ticker"
@@ -365,7 +369,7 @@ class Main extends Component {
                       accessor: "buy_or_sell",
                       maxWidth: 200,
                       filterable: false
-                    },
+                    }
                   ]
                 }
               ]}
