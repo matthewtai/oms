@@ -1,13 +1,12 @@
+@import url('https://fonts.googleapis.com/css?family=EB+Garamond'); 
+
 .App {
   width: 100vw;
   height: 100%;
   text-align: center;
-}
+  font-family: 'EB Garamond', serif;
+} 
 
-@fontface {
-  font-family: "Roboto", sans-serif;
-  src: url("https://fonts.googleapis.com/css?family=Roboto");
-}
 html{
   z-index: -1;
  background-color:#3b9dbf;
@@ -17,6 +16,10 @@ html{
   width: 12%;
   margin-left: 2.5rem;
   margin-top: 2.5rem;
+}
+
+#SearchBox0{
+  font-family: 'EB Garamond', serif;
 }
 
 .text-input {
