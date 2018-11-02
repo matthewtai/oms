@@ -1,7 +1,9 @@
 .card {
     width: 18rem;
 }
-
+body{
+    font-family: 'EB Garamond', serif;
+}
 .centered {
     position: fixed;
     top: 50%;
