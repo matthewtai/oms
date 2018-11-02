@@ -8,12 +8,15 @@
   font-family: "Roboto", sans-serif;
   src: url("https://fonts.googleapis.com/css?family=Roboto");
 }
-
+html{
+  z-index: -1;
+ background-color:#3b9dbf;
+}
 .SearchBar {
   height: 50px;
-  width: 20%;
+  width: 12%;
   margin-left: 2.5rem;
-  padding-top: 2.5rem;
+  margin-top: 2.5rem;
 }
 
 .text-input {

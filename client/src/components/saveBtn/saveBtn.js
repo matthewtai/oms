@@ -4,7 +4,7 @@ import "./saveBtn.css";
 function SaveBtn(props) {
   return (
     <div>
-      <button className="btn first" onClick={() => props.handleStageSubmit()}>
+      <button className="btnn first" onClick={() => props.handleStageSubmit()}>
         Record Trades
       </button>
     </div>

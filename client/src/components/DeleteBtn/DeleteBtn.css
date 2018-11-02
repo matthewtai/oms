@@ -1,3 +1,9 @@
 .delete-btn {
   color: #e74944;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+  border:none;
+  background-color: transparent;
+  outline:none;
 }

@@ -26,6 +26,6 @@ module.exports = function(Sequelize, DataTypes) {
     //   });
     // };
   
-    return Portfolios;
+    return Holdings;
   };
   
