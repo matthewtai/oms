@@ -11,13 +11,7 @@ module.exports = function(Sequelize, DataTypes) {
         type: DataTypes.INTEGER
       },
       closeprice:{
-        type: DataTypes.DECIMAL
-      },
-      current_weight:{
-        type: DataTypes.DECIMAL
-      },
-      shares_buy_sell:{
-        type: DataTypes.INTEGER
+        type: DataTypes.DECIMAL(10,2)
       }
     },
     {

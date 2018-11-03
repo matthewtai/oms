@@ -37,7 +37,7 @@ class Main extends Component {
   componentDidMount() {
     this.loadPortfolios();
     //this.performSearch();
-    this.handleAlphaApi();
+    //this.handleAlphaApi();
     this.loadStagingData();
     this.handlePortfolioManager();
   }
@@ -58,6 +58,19 @@ class Main extends Component {
       })
       .catch(err => console.log(err));
   };
+
+  findHolding = (tickerName) => {
+    API.getHoldings(tickerName)
+      .then(res => {
+        //console.log(res.data)
+        // this.setState({
+        //   data: res.data
+        // });
+        //this.setupData(res.data);c
+        console.log(res);
+      })
+      .catch(err => console.log(err));
+  }
 
   setupData = data => {
     data.map(element => {
@@ -92,7 +105,7 @@ class Main extends Component {
     });
   };
 
-  alertSomething = props => {
+  calculateShares = props => {
     //event.preventDefault();
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -152,7 +165,8 @@ class Main extends Component {
           ticker: res.data["Global Quote"]["01. symbol"],
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
-        //console.log(this.state.price);
+        console.log("nooo");
+        this.findHolding(this.state.ticker);
         this.setState((state, props) => {
           return {
             ...state,
@@ -182,7 +196,7 @@ class Main extends Component {
   handleAlphaApiCurrency = query => {
     API.getExchange(query)
       .then(res => {
-        console.log(res);
+        //console.log(res);
 
         const exchangerate = _.flattenDeep([
           res.data["Realtime Currency Exchange Rate"]
@@ -191,7 +205,8 @@ class Main extends Component {
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
-        console.log(this.state.exchangerate);
+        //console.log(this.state.exchangerate);
+        
       })
       .catch(err => console.log(err));
   };
@@ -214,7 +229,7 @@ class Main extends Component {
     this.setState({
       data: portfolios
     });
-    this.alertSomething(props);
+    this.calculateShares(props);
   };
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
