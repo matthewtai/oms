@@ -12,11 +12,10 @@ import StagingTable from "../../components/StagingTable/StagingTable";
 import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
-import Axios from "axios";
 import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
-import loginBtn from "../../components/LoginBtn";
+
 initializeIcons();
 
 class Main extends Component {
@@ -31,7 +30,8 @@ class Main extends Component {
     stagingData: [],
     exchangerate: "",
     ticker: "",
-    portfolio_manager: ""
+    portfolio_manager: "",
+    holdingsData: []
   };
 
   componentDidMount() {
@@ -160,12 +160,11 @@ class Main extends Component {
           ])
         );
         // let stocks = _.flattenDeep([res.data])
-        //console.log(stocks);
+        console.log(stocks);
         this.setState({
           ticker: res.data["Global Quote"]["01. symbol"],
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
-        console.log("nooo");
         this.findHolding(this.state.ticker);
         this.setState((state, props) => {
           return {
@@ -187,7 +186,8 @@ class Main extends Component {
           tickerName: namecurrency[0]["2. name"],
           currency: namecurrency[0]["8. currency"]
         });
-        console.log(this.state.currency);
+        console.log(namecurrency);
+        // console.log(this.state.currency);
         this.handleAlphaApiCurrency(this.state.currency);
       })
       .catch(err => console.log(err));
@@ -201,7 +201,7 @@ class Main extends Component {
         const exchangerate = _.flattenDeep([
           res.data["Realtime Currency Exchange Rate"]
         ]);
-        // console.log(exchangerate[0]["5. Exchange Rate"])
+        console.log(exchangerate)
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
@@ -271,6 +271,30 @@ class Main extends Component {
     return portfolios[index].newWeight;
   };
 
+  testing = () => {
+    console.log("click works")
+  }
+
+  handleHoldingTable = (props) => {
+    let portfolio = props.data;
+    API.getHoldingsByPortfolio(portfolio).then(res => {
+      console.log(res);
+      // this.setState({
+      //   holdingsData: res
+      // })
+    })
+  }
+
+  // setupHoldingData = data => {
+  //   data.map(element => {
+  //     element.newWeight = "";
+  //     // element.changed = false;
+  //   });
+  //   this.setState({
+  //     holdingAata: data
+  //   });
+  // };
+
   render = () => {
     //console.log(this.state.data.length);
     // console.log(this.state.data);
@@ -324,6 +348,11 @@ class Main extends Component {
                     {
                       Header: "Portfolio",
                       accessor: "portfolio",
+                      Cell: props => (
+                        <div className="portfolioBtn" onClick={() =>  this.handleHoldingTable(props)}>   
+                            {props.original.portfolio}
+                        </div>
+                      ),
                       maxWidth: 200,
                       filterMethod: (filter, row) =>
                         row[filter.id].startsWith(filter.value) &&
@@ -392,6 +421,63 @@ class Main extends Component {
               className="-striped -highlight"
               showPagination={false}
               defaultPageSize={this.state.data.length}
+            />
+          ) : (
+            <h2>NoData</h2>
+          )}
+          {this.state.holdingsData.length ? (
+            <ReactTable
+              data={this.state.holdingsData}
+              columns={[
+                {
+                  //Header: "Name",
+                  columns: [
+                    {
+                      Header: "ID",
+                      id: "id",
+                      accessor: "id",
+                      show: false
+                    },
+                    {
+                      Header: "Tickers",
+                      accessor: "ticker",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Shares Owned",
+                      accessor: "shares",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Current Weight(%)",
+                      accessor: "current_weight",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "New Weight(%)",
+                      Cell: props => (
+                        <div>
+                          <input
+                            type="text"
+                            id="input1"
+                            placeholder="%"
+                            style={{
+                              width: "50px"
+                           }} 
+                            className="number"
+                            value={this.getnewWeightValue(props)}
+                            onChange={e => this.handleNewWeightChange(props, e)}
+                          />
+                        </div>
+                      ),
+                    }
+                  ]
+                }
+              ]}
+              //defaultPageSize={10}
+              className="-striped -highlight"
+              showPagination={false}
+              pageSize={this.state.stagingData.length}
             />
           ) : (
             <h2>NoData</h2>
