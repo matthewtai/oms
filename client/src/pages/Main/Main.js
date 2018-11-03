@@ -15,7 +15,8 @@ import { initializeIcons } from "@uifabric/icons";
 import Axios from "axios";
 import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
-import loginBtn from "../../components/LoginBtn"
+import logo from "../Login/img/barlogo-01.png";
+import loginBtn from "../../components/LoginBtn";
 initializeIcons();
 
 class Main extends Component {
@@ -29,7 +30,8 @@ class Main extends Component {
     currency: "",
     stagingData: [],
     exchangerate: "",
-    ticker: ""
+    ticker: "",
+    portfolio_manager: ""
   };
 
   componentDidMount() {
@@ -37,6 +39,7 @@ class Main extends Component {
     //this.performSearch();
     //this.handleAlphaApi();
     this.loadStagingData();
+    this.handlePortfolioManager();
   }
 
   loadUsers = () => {
@@ -94,6 +97,14 @@ class Main extends Component {
       this.loadStagingData();
     });
   };
+
+  handlePortfolioManager = () => {
+    const manager = sessionStorage.name;
+    this.setState({
+      portfolio_manager: manager
+    });
+  };
+
   calculateShares = props => {
     //event.preventDefault();
     const portfolios = this.state.data;
@@ -233,7 +244,7 @@ class Main extends Component {
 
   handleSaveStages = data => {
     const save = {
-      portfolio_manager: data.portfolio,
+      portfolio_manager: this.state.portfolio_manager,
       ticker: this.state.ticker,
       portfolio: data.portfolio,
       old_weight: data.old_weight,
@@ -242,13 +253,13 @@ class Main extends Component {
       buy_or_sell: data.buy_or_sell,
       ticker_name: this.state.tickerName
     };
+    console.log("this is : " + this.state.portfolio_manager);
     API.postStagingData(save)
       .then(res => {
         this.loadStagingData();
         this.loadPortfolios();
       })
       .catch(err => console.log(err));
-    //console.log(this.state.stagingData);
   };
 
   getnewWeightValue = props => {
@@ -267,6 +278,9 @@ class Main extends Component {
       <Fabric>
         <div className="App">
           <div className="top">
+            <div className="logomain">
+              <img className="logosmain" alt="icon" src={logo} />
+            </div>
             <div className="SearchBar">
               <SearchBox
                 placeholder="Ticker"
@@ -369,7 +383,8 @@ class Main extends Component {
                       Header: "Buy OR Sell",
                       accessor: "buy_or_sell",
                       maxWidth: 200,
-                    },
+                      filterable: false
+                    }
                   ]
                 }
               ]}
@@ -397,13 +412,23 @@ class Main extends Component {
                       show: false
                     },
                     {
-                      Header: "Ticker",
-                      accessor: "ticker",
+                      Header: "Portfolio Manager",
+                      accessor: "portfolio_manager",
                       minWidth: 125
                     },
                     {
                       Header: "Portfolio",
                       accessor: "portfolio",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Ticker",
+                      accessor: "ticker",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Ticker Name",
+                      accessor: "ticker_name",
                       minWidth: 125
                     },
                     {
@@ -424,11 +449,6 @@ class Main extends Component {
                     {
                       Header: "Buy Or Sell",
                       accessor: "buy_or_sell",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Ticker Name",
-                      accessor: "ticker_name",
                       minWidth: 125
                     },
                     {

@@ -30,13 +30,11 @@ module.exports = function(Sequelize, DataTypes) {
     timestamps: false
   });
 
-  // Task.associate = function(radixDB) {
-  //   Task.belongsTo(radixDB.User, {
-  //     foreignKey: {
-  //       allowNull: false
-  //     }
-  //   });
-  // };
+  Portfolios.associate = function(omsdb) {
+    Portfolios.hasMany(omsdb.Holdings, {
+      foreignKey: 'portfolio', sourceKey: 'portfolio'
+    });
+  };
 
   return Portfolios;
 };

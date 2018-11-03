@@ -18,14 +18,7 @@ module.exports = function(Sequelize, DataTypes) {
       timestamps: false
     });
   
-    // Task.associate = function(radixDB) {
-    //   Task.belongsTo(radixDB.User, {
-    //     foreignKey: {
-    //       allowNull: false
-    //     }
-    //   });
-    // };
-  
+
     return Holdings;
   };
   

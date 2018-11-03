@@ -5,7 +5,6 @@ import Login from "./pages/Login"
 // import Detail from "./pages/Detail";
 // import NoMatch from "./pages/NoMatch";
 
-
   // handleApiForSubmit = () => {
   //   event.preventDefault();
   //     API.getSearch(this.state.stockSearch)
