@@ -32,7 +32,14 @@ export default {
   },
   postingLoginData: function(postingData){
     return axios.post("/api/login/accounts", postingData);
+  },
+  getHoldings: function(tickerName){
+    return axios.get("/api/Holdings/"+tickerName);
+  },
+  getHoldingsByPortfolio: function(portfolioName){
+    return axios.get("/api/Holdings/"+portfolioName);
   }
+  
   // // Saves a book to the database
   // saveBook: function(bookData) {
   //   return axios.post("/api/books", bookData);
