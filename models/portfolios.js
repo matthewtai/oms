@@ -30,11 +30,11 @@ module.exports = function(Sequelize, DataTypes) {
     timestamps: false
   });
 
-  Portfolios.associate = function(omsdb) {
-    Portfolios.hasMany(omsdb.Holdings, {
-      foreignKey: 'portfolio', sourceKey: 'portfolio'
-    });
-  };
+  // Portfolios.associate = function(omsdb) {
+  //   Portfolios.hasMany(omsdb.Holdings, {
+  //     foreignKey: 'portfolio', sourceKey: 'portfolio'
+  //   });
+  // };
 
   return Portfolios;
 };
