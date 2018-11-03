@@ -62,12 +62,23 @@ class Main extends Component {
   findHolding = (tickerName) => {
     API.getHoldings(tickerName)
       .then(res => {
-        //console.log(res.data)
-        // this.setState({
-        //   data: res.data
-        // });
-        //this.setupData(res.data);c
-        console.log(res);
+        let mainData = this.state.data;
+        //console.log(mainData);
+        mainData.map(main => {
+          let index = res.data.findIndex(obj => {
+            return obj.portfolio === main.portfolio;
+          });
+          //console.log(index);
+          if(index > -1){
+            main.shares_owned = res.data[index].shares;
+          }
+          else{
+            main.shares_owned = 0;
+          }
+          
+        })
+        //console.log(mainData);
+        this.setState({data : mainData});
       })
       .catch(err => console.log(err));
   }
@@ -295,6 +306,27 @@ class Main extends Component {
   //   });
   // };
 
+  handleCurrentWeight = props => {
+    const portfolios = this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    const shares = portfolios[index].shares_owned;
+    const nav = portfolios[index].NAV;
+    let currentWeight = ((shares * this.state.price * this.state.exchangerate / nav)*100).toFixed(2);
+
+    return currentWeight;
+  }
+
+  getCurrentCash = props => {
+    const portfolios = this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    const nav = portfolios[index].NAV;
+    const cash = portfolios[index].cash;
+    return (nav/cash).toFixed(2);
+  }
   render = () => {
     //console.log(this.state.data.length);
     // console.log(this.state.data);
@@ -366,13 +398,19 @@ class Main extends Component {
                     },
                     {
                       Header: "Current Cash(%)",
-                      accessor: "current_cash",
+                      accessor: "cash",
+                      Cell: (props) => {
+                        return <span>{this.getCurrentCash(props)}</span>;
+                      },
                       filterable: false,
                       maxWidth: 200
                     },
                     {
                       Header: "Old Weight(%)",
                       accessor: "old_weight",
+                      Cell: (props) => {
+                        return <span>{this.handleCurrentWeight(props)}</span>;
+                      },
                       filterable: false,
                       maxWidth: 200
                     },
