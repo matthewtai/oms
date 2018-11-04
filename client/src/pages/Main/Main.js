@@ -325,7 +325,7 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return (nav/cash).toFixed(2);
+    return ((cash/nav)*100).toFixed(2);
   }
   render = () => {
     //console.log(this.state.data.length);
