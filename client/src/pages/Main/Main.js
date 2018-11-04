@@ -417,32 +417,47 @@ class Main extends Component {
                       accessor: "NAV",
                       filterable: false
                     },
-
-                    {
-                      Header: "Shares Owned",
-                      accessor: "shares_owned",
-                      filterable: false,
-                      maxWidth: 200
+                    {Header: "Current Cash(%)",
+                    accessor: "cash",
+                    Cell: (props) => {
+                      return <span>{this.getCurrentCash(props)}</span>;
                     },
-
-                    {
-                      Header: "New Weight(%)",
-                      filterable: false,
-                      Cell: props => (
-                        <div>
-                          <input
-                            type="text"
-                            id="input1"
-                            placeholder="%"
-                            style={{
-                              width: "50px"
-                            }}
-                            className="number"
-                            value={this.getnewWeightValue(props)}
-                            onChange={e => this.handleNewWeightChange(props, e)}
-                          />
-                        </div>
-                      ),
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "Old Weight(%)",
+                    accessor: "old_weight",
+                    Cell: (props) => {
+                      return <span>{this.handleCurrentWeight(props)}</span>;
+                    },
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "Shares Owned",
+                    accessor: "shares_owned",
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "New Weight(%)",
+                    filterable: false,
+                    Cell: props => (
+                      <div>
+                        <input
+                          type="text"
+                          id="input1"
+                          placeholder="%"
+                          style={{
+                            width: "50px"
+                          }}
+                          className="number"
+                          value={this.getnewWeightValue(props)}
+                          onChange={e => this.handleNewWeightChange(props, e)}
+                        />
+                      </div>
+                    ),
                       maxWidth: 200
                     },
                     {
