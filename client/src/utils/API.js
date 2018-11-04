@@ -37,7 +37,11 @@ export default {
     return axios.get("/api/Holdings/"+tickerName);
   },
   getHoldingsByPortfolio: function(portfolioName){
-    return axios.get("/api/Holdings/"+portfolioName);
+    console.log(portfolioName)
+    return axios.get("/api/Holdings/portfolio/"+portfolioName);
+  },
+  getAllHoldings: function(){
+    return axios.get("/api/all/Holdings")
   }
   
   // // Saves a book to the database
