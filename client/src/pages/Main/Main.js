@@ -31,7 +31,9 @@ class Main extends Component {
     exchangerate: "",
     ticker: "",
     portfolio_manager: "",
-    holdingsData: []
+    holdingsData: [],
+    oldWeight: 0,
+    NAV: 0
   };
 
   componentDidMount() {
@@ -115,32 +117,6 @@ class Main extends Component {
     this.setState({
       portfolio_manager: manager
     });
-  };
-
-  calculateShares = props => {
-    //event.preventDefault();
-    const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
-    // console.log(this.state.price);
-    let weight =
-      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    this.handleBuyOrSell(index, weight);
-    if (weight < 0) {
-      let newShares =
-        (Math.abs(weight) * portfolios[index].NAV) /
-        (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell =
-        Math.round(newShares / 100) * 100);
-    } else {
-      let newShares =
-        (weight * portfolios[index].NAV) /
-        (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell =
-        Math.round(newShares / 100) * 100);
-    }
   };
 
   handleBuyOrSell = (index, weight) => {
@@ -228,22 +204,6 @@ class Main extends Component {
     this.handleAlphaApi(this.state.value);
   };
 
-  handleNewWeightChange = (props, event) => {
-    //console.log(props.target.value)
-    const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    //console.log(event.target.value);
-    portfolios[index].newWeight = event.target.value;
-    //come back to this
-    portfolios[index].changed = true;
-    this.setState({
-      data: portfolios
-    });
-    this.calculateShares(props);
-  };
-
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
   handleStageSubmit = () => {
     const portfolios = this.state.data;
@@ -274,8 +234,61 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+
+  calculateShares = props => {
+    //event.preventDefault();
+    console.log(props)
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
+    // console.log(this.state.price);
+    let weight =
+      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
+    this.handleBuyOrSell(index, weight);
+    // console.log(weight)
+    const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
+    if (weight < 0) {
+      let newShares =
+        (Math.abs(weight) * portfolios[index].NAV) /
+        (price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
+    } else {
+      let newShares =
+        (weight * portfolios[index].NAV) /
+        (price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
+    }
+  };
+
+  handleNewWeightChange = (props, event) => {
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    // console.log(event.target.value);
+    portfolios[index].newWeight = event.target.value;
+    //come back to this
+    portfolios[index].changed = true;
+
+    if(props.original.holdings){
+      this.setState({
+        holdingsData: portfolios
+      })
+      this.calculateShares(props);
+    }else{
+      this.setState({
+        data: portfolios
+      });
+      this.calculateShares(props);
+    }
+  };
+
   getnewWeightValue = props => {
-    const portfolios = this.state.data;
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
@@ -289,9 +302,15 @@ class Main extends Component {
 
   handleHoldingTable = (props) => {
     const portfolio = props.original.portfolio
-    console.log(portfolio)
+    const oldWeight = props.original.old_weight
+    const nav = props.original.NAV
+    // console.log(oldWeight)
+    this.setState({
+      oldWeight: oldWeight,
+      NAV: nav
+    })
     API.getHoldingsByPortfolio(portfolio).then(res => {
-      console.log(res.data);
+      // console.log(res.data);
       this.setupHoldingsData(res.data);
     })
       .catch(err => console.log(err));
@@ -300,11 +319,16 @@ class Main extends Component {
   setupHoldingsData = (data) => {
     data.map(element => {
       element.newWeight = "";
-      // element.changed = false;
+      element.changed = false;
+      element.holdings = true;
+      element.shares_buy_sell = 0;
+      element.old_weight = this.state.oldWeight;
+      element.NAV = this.state.NAV;
     });
     this.setState({
       holdingsData: data
     });
+    // console.log(this.state.data)
     console.log(this.state.holdingsData)
   };
 
@@ -334,7 +358,7 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return ((cash/nav)*100).toFixed(2);
+    return (nav/cash).toFixed(2);
   }
   render = () => {
     //console.log(this.state.data.length);
@@ -515,13 +539,19 @@ class Main extends Component {
                               width: "50px"
                             }}
                             className="number"
-                            // value={this.getnewWeightValue(props)}
-                            // onChange={e => this.handleNewWeightChange(props, e)}
+                            value={this.getnewWeightValue(props)}
+                            onChange={e => this.handleNewWeightChange(props, e)}
                           />
                         </div>
                       ),
                       maxWidth: 200
-                    }
+                    },
+                    {
+                      Header: "Shares to Buy/Sell",
+                      accessor: "shares_buy_sell",
+                      filterable: false,
+                      maxWidth: 200
+                    },
                   ]
                 }
               ]}
