@@ -85,7 +85,7 @@ transform: translateX(130%);
 
 }
 .sideBar.show{
-  
+  border-left:5px solid  rgb(68, 54, 36);
   width:30%;
   background-color: beige;
   -webkit-animation: slide-left .3s ease-out;
