@@ -40,6 +40,7 @@ class Main extends Component {
     //this.handleAlphaApi();
     this.loadStagingData();
     this.handlePortfolioManager();
+    this.handleAllHolding();
   }
 
   loadUsers = () => {
@@ -63,7 +64,7 @@ class Main extends Component {
     API.getHoldings(tickerName)
       .then(res => {
         let mainData = this.state.data;
-        //console.log(mainData);
+        console.log(mainData);
         mainData.map(main => {
           let index = res.data.findIndex(obj => {
             return obj.portfolio === main.portfolio;
@@ -287,24 +288,32 @@ class Main extends Component {
   }
 
   handleHoldingTable = (props) => {
-    let portfolio = props.data;
+    const portfolio = props.original.portfolio
+    console.log(portfolio)
     API.getHoldingsByPortfolio(portfolio).then(res => {
-      console.log(res);
-      // this.setState({
-      //   holdingsData: res
-      // })
+      console.log(res.data);
+      this.setupHoldingsData(res.data);
     })
+      .catch(err => console.log(err));
   }
 
-  // setupHoldingData = data => {
-  //   data.map(element => {
-  //     element.newWeight = "";
-  //     // element.changed = false;
-  //   });
-  //   this.setState({
-  //     holdingAata: data
-  //   });
-  // };
+  setupHoldingsData = (data) => {
+    data.map(element => {
+      element.newWeight = "";
+      // element.changed = false;
+    });
+    this.setState({
+      holdingsData: data
+    });
+    console.log(this.state.holdingsData)
+  };
+
+  handleAllHolding = () => {
+    API.getAllHoldings().then(res => {
+      // console.log(res)
+    })
+      .catch(err => console.log(err));
+  } 
 
   handleCurrentWeight = props => {
     const portfolios = this.state.data;
@@ -360,6 +369,7 @@ class Main extends Component {
               stockItems={this.state.stocks}
             />
           </div>
+                                                                {/* table one */}
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
@@ -463,6 +473,8 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
+                                                              {/* table 2 */}
+          <br />  <br />  <br />
           {this.state.holdingsData.length ? (
             <ReactTable
               data={this.state.holdingsData}
@@ -487,12 +499,12 @@ class Main extends Component {
                       minWidth: 125
                     },
                     {
-                      Header: "Current Weight(%)",
-                      accessor: "current_weight",
-                      minWidth: 125
+                      Header: "Closing Price",
+                      accessor: "closeprice"
                     },
                     {
                       Header: "New Weight(%)",
+                      filterable: false,
                       Cell: props => (
                         <div>
                           <input
@@ -501,25 +513,28 @@ class Main extends Component {
                             placeholder="%"
                             style={{
                               width: "50px"
-                           }} 
+                            }}
                             className="number"
-                            value={this.getnewWeightValue(props)}
-                            onChange={e => this.handleNewWeightChange(props, e)}
+                            // value={this.getnewWeightValue(props)}
+                            // onChange={e => this.handleNewWeightChange(props, e)}
                           />
                         </div>
                       ),
+                      maxWidth: 200
                     }
                   ]
                 }
               ]}
               //defaultPageSize={10}
               className="-striped -highlight"
-              showPagination={false}
-              pageSize={this.state.stagingData.length}
+              showPagination={true}
+              pageSize={10}
             />
           ) : (
             <h2>NoData</h2>
           )}
+
+                                                                       {/* table 3 */}
           <br />
           <br />
           {this.state.stagingData.length ? (

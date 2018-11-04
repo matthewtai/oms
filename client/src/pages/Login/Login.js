@@ -25,7 +25,7 @@ export default class Login extends Component {
     this.setState({
       userName: event.target.value
     });
-    console.log(this.state.userName);
+    // console.log(this.state.userName);
   };
 
   handlePasswordChange = event => {
