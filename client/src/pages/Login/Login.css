@@ -1,9 +1,11 @@
+@import url("https://fonts.googleapis.com/css?family=Nunito+Sans:300");
+
 .card {
   width: 18rem;
 }
 body {
   font-family: "Nunito Sans", sans-serif;
-  color: rgb(0, 135, 182);
+  color:#05badd;
 }
 .centered {
   position: fixed;
@@ -15,5 +17,9 @@ body {
 
 .logo {
   width: 100%;
-  margin-bottom: 8rem;
+  margin-bottom: 8vh;
+}
+
+.loginbutton{
+  text-align: center;
 }

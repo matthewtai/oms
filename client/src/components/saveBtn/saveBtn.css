@@ -1,6 +1,6 @@
 .btnn {
-  background-color: green;
-  border: 2px solid green;
+  background-color: 	#ff8007;
+  border: 2px solid 	#ff8007;
   border-radius: 0.6em;
   color: white;
   cursor: pointer;
@@ -25,6 +25,6 @@
     opacity 300ms ease-in-out;
 }
 .first:hover {
-  box-shadow: 0 0 40px 40px green inset;
+  box-shadow: 0 0 40px 40px 	#ff8007 inset;
   opacity: 0.5;
 }

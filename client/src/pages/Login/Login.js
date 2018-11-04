@@ -67,11 +67,13 @@ export default class Login extends Component {
             <input
               className="form-control"
               type="userName"
+              placeholder = "Username"
               value={this.state.userName}
               onChange={this.handleUserNameChange}
-              
+              onfocus={this.placeholder = ""}
+              onBlur={this.placeholder = "Username"}
+
             />
-            <label for="user" class="label">Username</label>
           </div>
           
           <div className="form-group">
@@ -80,10 +82,15 @@ export default class Login extends Component {
               type="password"
               value={this.state.password}
               onChange={this.handlePasswordChange}
+              placeholder = "Password"
+              onfocus={(e) => e.target.placeholder = ""}
+              onBlur={(e) => e.target.placeholder = "Password"}
             />
-              <label for="password" class="label">Password</label>
+    
           </div>
+          <div className = "loginbutton">
           <LoginBtn onClick={this.handleLogin} type="submit" />
+        </div>
         </div>
       </form>
     );

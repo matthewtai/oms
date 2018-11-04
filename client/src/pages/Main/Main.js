@@ -33,7 +33,14 @@ class Main extends Component {
     portfolio_manager: "",
     holdingsData: [],
     oldWeight: 0,
-    NAV: 0
+    NAV: 0,
+    showsidebar: false,
+  };
+
+  toggleSideBar = () => {
+    this.setState({
+      showsidebar: !this.state.showsidebar
+    });
   };
 
   componentDidMount() {
@@ -62,7 +69,7 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
-  findHolding = (tickerName) => {
+  findHolding = tickerName => {
     API.getHoldings(tickerName)
       .then(res => {
         let mainData = this.state.data;
@@ -72,19 +79,17 @@ class Main extends Component {
             return obj.portfolio === main.portfolio;
           });
           //console.log(index);
-          if(index > -1){
+          if (index > -1) {
             main.shares_owned = res.data[index].shares;
-          }
-          else{
+          } else {
             main.shares_owned = 0;
           }
-          
-        })
+        });
         //console.log(mainData);
-        this.setState({data : mainData});
+        this.setState({ data: mainData });
       })
       .catch(err => console.log(err));
-  }
+  };
 
   setupData = data => {
     data.map(element => {
@@ -119,8 +124,9 @@ class Main extends Component {
     });
   };
 
-  handleBuyOrSell = (index, weight) => {
-    const portfolios = this.state.data;
+  handleBuyOrSell = (index, weight, portfolio) => {
+    const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
+    console.log(portfolio)
     let sellOrBuy = "";
     if (weight < 0) {
       sellOrBuy = "Sell";
@@ -189,12 +195,11 @@ class Main extends Component {
         const exchangerate = _.flattenDeep([
           res.data["Realtime Currency Exchange Rate"]
         ]);
-        console.log(exchangerate)
+        console.log(exchangerate);
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
         //console.log(this.state.exchangerate);
-        
       })
       .catch(err => console.log(err));
   };
@@ -246,7 +251,7 @@ class Main extends Component {
     // console.log(this.state.price);
     let weight =
       portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    this.handleBuyOrSell(index, weight);
+    this.handleBuyOrSell(index, weight, portfolios);
     // console.log(weight)
     const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
     if (weight < 0) {
@@ -297,10 +302,11 @@ class Main extends Component {
   };
 
   testing = () => {
-    console.log("click works")
-  }
+    console.log("click works");
+  };
 
   handleHoldingTable = (props) => {
+    this.toggleSideBar();
     const portfolio = props.original.portfolio
     const oldWeight = props.original.old_weight
     const nav = props.original.NAV
@@ -314,9 +320,9 @@ class Main extends Component {
       this.setupHoldingsData(res.data);
     })
       .catch(err => console.log(err));
-  }
+  };
 
-  setupHoldingsData = (data) => {
+  setupHoldingsData = data => {
     data.map(element => {
       element.newWeight = "";
       element.changed = false;
@@ -324,6 +330,7 @@ class Main extends Component {
       element.shares_buy_sell = 0;
       element.old_weight = this.state.oldWeight;
       element.NAV = this.state.NAV;
+      element.buy_or_sell = "";
     });
     this.setState({
       holdingsData: data
@@ -333,11 +340,12 @@ class Main extends Component {
   };
 
   handleAllHolding = () => {
-    API.getAllHoldings().then(res => {
-      // console.log(res)
-    })
+    API.getAllHoldings()
+      .then(res => {
+        // console.log(res)
+      })
       .catch(err => console.log(err));
-  } 
+  };
 
   handleCurrentWeight = props => {
     const portfolios = this.state.data;
@@ -346,10 +354,13 @@ class Main extends Component {
     });
     const shares = portfolios[index].shares_owned;
     const nav = portfolios[index].NAV;
-    let currentWeight = ((shares * this.state.price * this.state.exchangerate / nav)*100).toFixed(2);
+    let currentWeight = (
+      ((shares * this.state.price * this.state.exchangerate) / nav) *
+      100
+    ).toFixed(2);
 
     return currentWeight;
-  }
+  };
 
   getCurrentCash = props => {
     const portfolios = this.state.data;
@@ -358,42 +369,41 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return (nav/cash).toFixed(2);
-  }
+    return ((cash / nav) * 100).toFixed(2);
+  };
   render = () => {
     //console.log(this.state.data.length);
     // console.log(this.state.data);
+    const sidebarvis = this.state.showsidebar ? "show" : "hide";
     return (
-      <Fabric>
-        <div className="App">
-          <div className="top">
-            <div className="logomain">
-              <img className="logosmain" alt="icon" src={logo} />
-            </div>
-            <div className="SearchBar">
-              <SearchBox
-                placeholder="Ticker"
-                onChange={value =>
-                  this.setState({
-                    value: value
-                  })
-                }
-                onSearch={this.handleSubmit}
-              />
-            </div>
-
-            {/* <SearchBar value={ value }
-                   onChange={ this.handleSearchChange }
-                   onClick={ this.handleSubmit }/> */}
-            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
-
-            <StockList
-              currency={this.state.currency}
-              tickerName={this.state.tickerName}
-              stockItems={this.state.stocks}
+      <div className="App">
+        <div className="top">
+          <div className="SearchBar">
+            <img className="logoMain" alt="icon" src={logo} />
+            <SearchBox
+              placeholder="Ticker"
+              onChange={value =>
+                this.setState({
+                  value: value
+                })
+              }
+              onSearch={this.handleSubmit}
             />
           </div>
-                                                                {/* table one */}
+
+          {/* <SearchBar value={ value }
+                   onChange={ this.handleSearchChange }
+                   onClick={ this.handleSubmit }/> */}
+          <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+
+          <StockList
+            currency={this.state.currency}
+            tickerName={this.state.tickerName}
+            stockItems={this.state.stocks}
+          />
+        </div>
+      {/* ==========================================            Table 1                  =============================== */}
+        <div className="tableandbar">
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
@@ -415,8 +425,11 @@ class Main extends Component {
                       Header: "Portfolio",
                       accessor: "portfolio",
                       Cell: props => (
-                        <div className="portfolioBtn" onClick={() =>  this.handleHoldingTable(props)}>   
-                            {props.original.portfolio}
+                        <div
+                          className="portfolioBtn"
+                          onClick={() => this.handleHoldingTable(props)}
+                        >
+                          {props.original.portfolio}
                         </div>
                       ),
                       maxWidth: 200,
@@ -427,51 +440,49 @@ class Main extends Component {
                     {
                       Header: "NAV",
                       accessor: "NAV",
-                      filterable: false,
-                      maxWidth: 200
+                      filterable: false
                     },
-                    {
-                      Header: "Current Cash(%)",
-                      accessor: "cash",
-                      Cell: (props) => {
-                        return <span>{this.getCurrentCash(props)}</span>;
-                      },
-                      filterable: false,
-                      maxWidth: 200
+                    {Header: "Current Cash(%)",
+                    accessor: "cash",
+                    Cell: (props) => {
+                      return <span>{this.getCurrentCash(props)}</span>;
                     },
-                    {
-                      Header: "Old Weight(%)",
-                      accessor: "old_weight",
-                      Cell: (props) => {
-                        return <span>{this.handleCurrentWeight(props)}</span>;
-                      },
-                      filterable: false,
-                      maxWidth: 200
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "Old Weight(%)",
+                    accessor: "old_weight",
+                    Cell: (props) => {
+                      return <span>{this.handleCurrentWeight(props)}</span>;
                     },
-                    {
-                      Header: "Shares Owned",
-                      accessor: "shares_owned",
-                      filterable: false,
-                      maxWidth: 200
-                    },
-                    {
-                      Header: "New Weight(%)",
-                      filterable: false,
-                      Cell: props => (
-                        <div>
-                          <input
-                            type="text"
-                            id="input1"
-                            placeholder="%"
-                            style={{
-                              width: "50px"
-                            }}
-                            className="number"
-                            value={this.getnewWeightValue(props)}
-                            onChange={e => this.handleNewWeightChange(props, e)}
-                          />
-                        </div>
-                      ),
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "Shares Owned",
+                    accessor: "shares_owned",
+                    filterable: false,
+                    maxWidth: 200
+                  },
+                  {
+                    Header: "New Weight(%)",
+                    filterable: false,
+                    Cell: props => (
+                      <div>
+                        <input
+                          type="text"
+                          id="input1"
+                          placeholder="%"
+                          style={{
+                            width: "50px"
+                          }}
+                          className="number"
+                          value={this.getnewWeightValue(props)}
+                          onChange={e => this.handleNewWeightChange(props, e)}
+                        />
+                      </div>
+                    ),
                       maxWidth: 200
                     },
                     {
@@ -490,16 +501,18 @@ class Main extends Component {
                 }
               ]}
               //defaultPageSize={10}
-              className="-striped -highlight"
+              className={` -striped -highlight portfoliotable ${sidebarvis}`}
               showPagination={false}
               defaultPageSize={this.state.data.length}
             />
           ) : (
             <h2>NoData</h2>
           )}
-                                                              {/* table 2 */}
-          <br />  <br />  <br />
-          {this.state.holdingsData.length ? (
+          {/*======================================================= table 2 =======================================*/}
+          <br /> <br /> <br />
+          <div className={`sideBar ${sidebarvis}`}>
+             CALL PORTFOLIO NAME HERE
+             {this.state.holdingsData.length ? (
             <ReactTable
               data={this.state.holdingsData}
               columns={[
@@ -552,105 +565,110 @@ class Main extends Component {
                       filterable: false,
                       maxWidth: 200
                     },
+                    {
+                      Header: "Buy Or Sell",
+                      accessor: "buy_or_sell",
+                      filterable: false,
+                      maxWidth: 200
+                    },
                   ]
                 }
               ]}
               //defaultPageSize={10}
               className="-striped -highlight"
               showPagination={true}
-              pageSize={10}
+              pageSize={15}
             />
           ) : (
             <h2>NoData</h2>
           )}
-
-                                                                       {/* table 3 */}
-          <br />
-          <br />
-          {this.state.stagingData.length ? (
-            <ReactTable
-              data={this.state.stagingData}
-              columns={[
-                {
-                  //Header: "Name",
-                  columns: [
-                    {
-                      Header: "ID",
-                      id: "id",
-                      accessor: "id",
-                      show: false
-                    },
-                    {
-                      Header: "Portfolio Manager",
-                      accessor: "portfolio_manager",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Portfolio",
-                      accessor: "portfolio",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Ticker",
-                      accessor: "ticker",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Ticker Name",
-                      accessor: "ticker_name",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Old Weight(%)",
-                      accessor: "old_weight",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "New Weight(%)",
-                      accessor: "new_weight",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Shares to Buy/Sell",
-                      accessor: "shares_buy_sell",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Buy Or Sell",
-                      accessor: "buy_or_sell",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Delete",
-                      Cell: props => (
-                        <DeleteBtn onClick={() => this.deleteStaging(props)} />
-                      )
-                    }
-                  ]
-                }
-              ]}
-              //defaultPageSize={10}
-              className="-striped -highlight"
-              showPagination={false}
-              pageSize={this.state.stagingData.length}
-            />
-          ) : (
-            <h2>NoData</h2>
-          )}
-
-          <br />
-          <br />
-          <br />
-          {/* {this.state.stagingData.length ? (
-          <StagingTable 
-          data={this.state.stagingData}
-          />
-          ):(<h2>Hahahah</h2>)} */}
-        </div>
-        {/* <StagingTable/> */}
-      </Fabric>
+            </div>
+            </div>
+            {/* ======================================================= table 3 ======================================*/}
+            <br />
+            <br />
+            {this.state.stagingData.length ? (
+              <ReactTable
+                data={this.state.stagingData}
+                columns={[
+                  {
+                    //Header: "Name",
+                    columns: [
+                      {
+                        Header: "ID",
+                        id: "id",
+                        accessor: "id",
+                        show: false
+                      },
+                      {
+                        Header: "Portfolio Manager",
+                        accessor: "portfolio_manager",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Portfolio",
+                        accessor: "portfolio",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Ticker",
+                        accessor: "ticker",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Ticker Name",
+                        accessor: "ticker_name",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Old Weight(%)",
+                        accessor: "old_weight",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "New Weight(%)",
+                        accessor: "new_weight",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Shares to Buy/Sell",
+                        accessor: "shares_buy_sell",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Buy Or Sell",
+                        accessor: "buy_or_sell",
+                        minWidth: 125
+                      },
+                      {
+                        Header: "Delete",
+                        Cell: props => (
+                          <DeleteBtn
+                            onClick={() => this.deleteStaging(props)}
+                          />
+                        )
+                      }
+                    ]
+                  }
+                ]}
+                //defaultPageSize={10}
+                className="-striped -highlight stagingtable"
+                showPagination={false}
+                pageSize={this.state.stagingData.length}
+              />
+            ) : (
+              <h2>NoData</h2>
+            )}
+            <br />
+            <br />
+            <br />
+          </div>
+        
+      
     );
   };
 }
+
+
 
 export default Main;
