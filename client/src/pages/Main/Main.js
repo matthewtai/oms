@@ -125,10 +125,8 @@ class Main extends Component {
   };
 
   handleBuyOrSell = (index, weight, portfolio) => {
-    const portfolios = portfolio[0].holdings
-      ? this.state.holdingsData
-      : this.state.data;
-    console.log(portfolio);
+    const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
+    // console.log(portfolio)
     let sellOrBuy = "";
     if (weight < 0) {
       sellOrBuy = "Sell";
@@ -220,7 +218,7 @@ class Main extends Component {
       }
     });
   };
-
+  // user [...]
   handleSaveStages = data => {
     const save = {
       portfolio_manager: this.state.portfolio_manager,
@@ -268,8 +266,8 @@ class Main extends Component {
     });
     // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
     // console.log(this.state.price);
-    let weight =
-      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
+    let weight =  portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
+    console.log(weight)
     this.handleBuyOrSell(index, weight, portfolios);
     // console.log(weight)
     const price = props.original.holdings
@@ -315,9 +313,7 @@ class Main extends Component {
   };
 
   getnewWeightValue = props => {
-    const portfolios = props.original.holdings
-      ? this.state.holdingsData
-      : this.state.data;
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
@@ -372,6 +368,7 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+  //old weight
   handleCurrentWeight = props => {
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -379,14 +376,12 @@ class Main extends Component {
     });
     const shares = portfolios[index].shares_owned;
     const nav = portfolios[index].NAV;
-    let currentWeight = (
-      ((shares * this.state.price * this.state.exchangerate) / nav) *
-      100
-    ).toFixed(2);
+    let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
 
-    return currentWeight;
+    return (portfolios[index].old_weight = currentWeight)
   };
 
+  //current cash
   getCurrentCash = props => {
     const portfolios = this.state.data;
     const index = portfolios.findIndex(element => {
@@ -394,7 +389,7 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return ((cash / nav) * 100).toFixed(2);
+    return ((portfolios[index].cash = (cash / nav) * 100).toFixed(2));
   };
   render = () => {
     //console.log(this.state.data.length);
@@ -603,7 +598,7 @@ class Main extends Component {
                 //defaultPageSize={10}
                 className="-striped -highlight"
                 showPagination={true}
-                pageSize={15}
+                pageSize={10}
               />
             ) : (
               <h2>NoData</h2>
