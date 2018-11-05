@@ -1,17 +1,14 @@
 .btnn {
   background-color: 	#ff8007;
-  border: 2px solid 	#ff8007;
+  border: 0.5px solid 	#ff8007;
   border-radius: 0.6em;
   color: white;
   cursor: pointer;
-  align-self: center;
-  font-size: 1rem;
+  font-size: 0.8rem;
   font-weight: 400;
   line-height: 1;
-  margin: 20px;
-  padding: 1.2em 2.8em;
-  text-decoration: none;
-  text-align: center;
+  margin-bottom: 1em;
+  padding: 1em 1.5em;
   text-transform: uppercase;
 }
 .btn:hover,
