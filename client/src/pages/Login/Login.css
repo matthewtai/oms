@@ -5,8 +5,15 @@
 }
 body {
   font-family: "Nunito Sans", sans-serif;
-  color:#05badd;
+ 
+  color : rgb(33, 183, 233);
 }
+
+.logindiv{
+  height: 100vh;
+  background-color: rgb(33, 183, 233) !important;
+}
+
 .centered {
   position: fixed;
   top: 50%;

@@ -25,7 +25,7 @@ export default class Login extends Component {
     this.setState({
       userName: event.target.value
     });
-    // console.log(this.state.userName);
+   // console.log(this.state.userName);
   };
 
   handlePasswordChange = event => {
@@ -44,55 +44,58 @@ export default class Login extends Component {
       password: this.state.password
     };
     console.log(userInput);
-    API.postingLoginData(userInput).then( res => {
-      // console.log(res);
-      if (res.data !== null) {
-        sessionStorage.name = res.data.firstName;
-        window.location.href = "/oms";
-      } else {
-        console.log(`does not work`)
-      }
-      // console.log(res.data);
-    }) 
+    API.postingLoginData(userInput)
+      .then(res => {
+        // console.log(res);
+        if (res.data !== null) {
+          sessionStorage.name = res.data.firstName;
+          window.location.href = "/oms";
+        } else {
+          console.log(`does not work`);
+        }
+        // console.log(res.data);
+      })
       .catch(err => console.log(err));
   };
 
   render() {
     return (
-      <form className="card centered" onSubmit={this.handleSubmit}>
-        <div className="card-body">
-          <img className="logo" alt="icon" src={logo} />
-          <h2> Login </h2>
-          <div className="form-group">
-            <input
-              className="form-control"
-              type="userName"
-              placeholder = "Username"
-              value={this.state.userName}
-              onChange={this.handleUserNameChange}
-              onfocus={this.placeholder = ""}
-              onBlur={this.placeholder = "Username"}
+      <div className="logindiv">
+        <form className="card centered" onSubmit={this.handleSubmit}>
+          <div className="card-body">
+            <img className="logo" alt="icon" src={logo} />
+            <h2> Login </h2>
+            <div className="form-group">
+              <input
+                className="form-control"
+                type="userName"
+                placeholder = "Username"
+                value={this.state.userName}
+                onChange={this.handleUserNameChange}
+                onfocus={this.placeholder = ""}
+                onBlur={this.placeholder = "Username"}
+              />
+  
+            </div>
 
-            />
-          </div>
-          
-          <div className="form-group">
-            <input
-              className="form-control"
-              type="password"
-              value={this.state.password}
-              onChange={this.handlePasswordChange}
-              placeholder = "Password"
+            <div className="form-group">
+              <input
+                className="form-control"
+                type="password"
+                value={this.state.password}
+                onChange={this.handlePasswordChange}
+                placeholder = "Password"
               onfocus={(e) => e.target.placeholder = ""}
               onBlur={(e) => e.target.placeholder = "Password"}
-            />
-    
+              />
+             
+            </div>
+            <div className = "loginbutton">
+            <LoginBtn onClick={this.handleLogin} type="submit" />
           </div>
-          <div className = "loginbutton">
-          <LoginBtn onClick={this.handleLogin} type="submit" />
-        </div>
-        </div>
-      </form>
+          </div>
+        </form>
+      </div>
     );
   }
 }
