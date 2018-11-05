@@ -237,8 +237,24 @@ class Main extends Component {
       .then(res => {
         this.loadStagingData();
         this.loadPortfolios();
+        // this.loadCashUpdate();
       })
       .catch(err => console.log(err));
+  };
+
+  loadCashUpdate = props => {
+    const trades = this.state.stagingData;
+    const index = trades.findIndex(element => {
+      return element.id === props.row.id;
+    });
+
+    const portfolio = trades[index].portfolio;
+    const oldWeight = trades[index].old_weight;
+    const newWeight = trades[index].new_weight;
+
+    // for each trade, grab the portfolio and calculate new weight minus old weight 
+    // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
+
   };
 
   calculateShares = props => {
