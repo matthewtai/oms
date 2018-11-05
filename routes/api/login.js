@@ -12,7 +12,7 @@ module.exports = function(app) {
                 password: req.body.password
             }
         }).then(function(result) {
-            console.log(result);
+            // console.log(result);
             res.json(result);
         });
     });

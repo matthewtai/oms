@@ -32,7 +32,9 @@ class Main extends Component {
     ticker: "",
     portfolio_manager: "",
     holdingsData: [],
-    showsidebar: false
+    oldWeight: 0,
+    NAV: 0,
+    showsidebar: false,
   };
 
   toggleSideBar = () => {
@@ -122,34 +124,9 @@ class Main extends Component {
     });
   };
 
-  calculateShares = props => {
-    //event.preventDefault();
-    const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
-    // console.log(this.state.price);
-    let weight =
-      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    this.handleBuyOrSell(index, weight);
-    if (weight < 0) {
-      let newShares =
-        (Math.abs(weight) * portfolios[index].NAV) /
-        (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell =
-        Math.round(newShares / 100) * 100);
-    } else {
-      let newShares =
-        (weight * portfolios[index].NAV) /
-        (this.state.price * this.state.exchangerate);
-      return (portfolios[index].shares_buy_sell =
-        Math.round(newShares / 100) * 100);
-    }
-  };
-
-  handleBuyOrSell = (index, weight) => {
-    const portfolios = this.state.data;
+  handleBuyOrSell = (index, weight, portfolio) => {
+    const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
+    console.log(portfolio)
     let sellOrBuy = "";
     if (weight < 0) {
       sellOrBuy = "Sell";
@@ -232,22 +209,6 @@ class Main extends Component {
     this.handleAlphaApi(this.state.value);
   };
 
-  handleNewWeightChange = (props, event) => {
-    //console.log(props.target.value)
-    const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    //console.log(event.target.value);
-    portfolios[index].newWeight = event.target.value;
-    //come back to this
-    portfolios[index].changed = true;
-    this.setState({
-      data: portfolios
-    });
-    this.calculateShares(props);
-  };
-
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
   handleStageSubmit = () => {
     const portfolios = this.state.data;
@@ -278,8 +239,61 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+
+  calculateShares = props => {
+    //event.preventDefault();
+    console.log(props)
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
+    // console.log(this.state.price);
+    let weight =
+      portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
+    this.handleBuyOrSell(index, weight, portfolios);
+    // console.log(weight)
+    const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
+    if (weight < 0) {
+      let newShares =
+        (Math.abs(weight) * portfolios[index].NAV) /
+        (price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
+    } else {
+      let newShares =
+        (weight * portfolios[index].NAV) /
+        (price * this.state.exchangerate);
+      return (portfolios[index].shares_buy_sell =
+        Math.round(newShares / 100) * 100);
+    }
+  };
+
+  handleNewWeightChange = (props, event) => {
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
+    const index = portfolios.findIndex(element => {
+      return element.id === props.row.id;
+    });
+    // console.log(event.target.value);
+    portfolios[index].newWeight = event.target.value;
+    //come back to this
+    portfolios[index].changed = true;
+
+    if(props.original.holdings){
+      this.setState({
+        holdingsData: portfolios
+      })
+      this.calculateShares(props);
+    }else{
+      this.setState({
+        data: portfolios
+      });
+      this.calculateShares(props);
+    }
+  };
+
   getnewWeightValue = props => {
-    const portfolios = this.state.data;
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
@@ -291,27 +305,38 @@ class Main extends Component {
     console.log("click works");
   };
 
-  handleHoldingTable = props => {
+  handleHoldingTable = (props) => {
     this.toggleSideBar();
-    const portfolio = props.original.portfolio;
-    console.log(portfolio);
-    API.getHoldingsByPortfolio(portfolio)
-      .then(res => {
-        console.log(res.data);
-        this.setupHoldingsData(res.data);
-      })
+    const portfolio = props.original.portfolio
+    const oldWeight = props.original.old_weight
+    const nav = props.original.NAV
+    // console.log(oldWeight)
+    this.setState({
+      oldWeight: oldWeight,
+      NAV: nav
+    })
+    API.getHoldingsByPortfolio(portfolio).then(res => {
+      // console.log(res.data);
+      this.setupHoldingsData(res.data);
+    })
       .catch(err => console.log(err));
   };
 
   setupHoldingsData = data => {
     data.map(element => {
       element.newWeight = "";
-      // element.changed = false;
+      element.changed = false;
+      element.holdings = true;
+      element.shares_buy_sell = 0;
+      element.old_weight = this.state.oldWeight;
+      element.NAV = this.state.NAV;
+      element.buy_or_sell = "";
     });
     this.setState({
       holdingsData: data
     });
-    console.log(this.state.holdingsData);
+    // console.log(this.state.data)
+    console.log(this.state.holdingsData)
   };
 
   handleAllHolding = () => {
@@ -377,7 +402,7 @@ class Main extends Component {
             stockItems={this.state.stocks}
           />
         </div>
-
+      {/* ==========================================            Table 1                  =============================== */}
         <div className="tableandbar">
           {this.state.data.length ? (
             <ReactTable
@@ -483,71 +508,83 @@ class Main extends Component {
           ) : (
             <h2>NoData</h2>
           )}
-          {/* table 2 */}
+          {/*======================================================= table 2 =======================================*/}
           <br /> <br /> <br />
           <div className={`sideBar ${sidebarvis}`}>
              CALL PORTFOLIO NAME HERE
-            {this.state.holdingsData.length ? (
-              <ReactTable
-                data={this.state.holdingsData}
-                columns={[
-                  {
-                    //Header: "Name",
-                    columns: [
-                      {
-                        Header: "ID",
-                        id: "id",
-                        accessor: "id",
-                        show: false
-                      },
-                      {
-                        Header: "Tickers",
-                        accessor: "ticker",
-                        minWidth: 125
-                      },
-                      {
-                        Header: "Shares Owned",
-                        accessor: "shares",
-                        minWidth: 125
-                      },
-                      {
-                        Header: "Closing Price",
-                        accessor: "closeprice"
-                      },
-                      {
-                        Header: "New Weight(%)",
-                        filterable: false,
-                        Cell: props => (
-                          <div>
-                            <input
-                              type="text"
-                              id="input1"
-                              placeholder="%"
-                              style={{
-                                width: "50px"
-                              }}
-                              className="number"
-                              // value={this.getnewWeightValue(props)}
-                              // onChange={e => this.handleNewWeightChange(props, e)}
-                            />
-                          </div>
-                        ),
-                        maxWidth: 200
-                      }
-                    ]
-                  }
-                ]}
-                //defaultPageSize={10}
-                className="-striped -highlight portfoliotable"
-                showPagination={true}
-                pageSize={10}
-              />
-            ) : (
-              <h2>NoData</h2>
-            )}
+             {this.state.holdingsData.length ? (
+            <ReactTable
+              data={this.state.holdingsData}
+              columns={[
+                {
+                  //Header: "Name",
+                  columns: [
+                    {
+                      Header: "ID",
+                      id: "id",
+                      accessor: "id",
+                      show: false
+                    },
+                    {
+                      Header: "Tickers",
+                      accessor: "ticker",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Shares Owned",
+                      accessor: "shares",
+                      minWidth: 125
+                    },
+                    {
+                      Header: "Closing Price",
+                      accessor: "closeprice"
+                    },
+                    {
+                      Header: "New Weight(%)",
+                      filterable: false,
+                      Cell: props => (
+                        <div>
+                          <input
+                            type="text"
+                            id="input1"
+                            placeholder="%"
+                            style={{
+                              width: "50px"
+                            }}
+                            className="number"
+                            value={this.getnewWeightValue(props)}
+                            onChange={e => this.handleNewWeightChange(props, e)}
+                          />
+                        </div>
+                      ),
+                      maxWidth: 200
+                    },
+                    {
+                      Header: "Shares to Buy/Sell",
+                      accessor: "shares_buy_sell",
+                      filterable: false,
+                      maxWidth: 200
+                    },
+                    {
+                      Header: "Buy Or Sell",
+                      accessor: "buy_or_sell",
+                      filterable: false,
+                      maxWidth: 200
+                    },
+                  ]
+                }
+              ]}
+              //defaultPageSize={10}
+              className="-striped -highlight"
+              showPagination={true}
+              pageSize={15}
+            />
+          ) : (
+            <h2>NoData</h2>
+          )}
             </div>
             </div>
-            {/* table 3 */}
+            {/* ======================================================= table 3 ======================================*/}
             <br />
             <br />
             {this.state.stagingData.length ? (
@@ -631,5 +668,7 @@ class Main extends Component {
     );
   };
 }
+
+
 
 export default Main;
