@@ -92,6 +92,7 @@ class Main extends Component {
   };
 
   setupData = data => {
+
     data.map(element => {
       element.newWeight = "";
       element.changed = false;
@@ -253,6 +254,7 @@ class Main extends Component {
     const newWeight = trades[index].new_weight;
 
     // for each trade, grab the portfolio and calculate new weight minus old weight 
+    console.log(portfolio);
     // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
 
   };
@@ -383,7 +385,7 @@ class Main extends Component {
       ((shares * this.state.price * this.state.exchangerate) / nav) *
       100
     ).toFixed(2);
-
+      
     return currentWeight;
   };
 
@@ -480,7 +482,7 @@ class Main extends Component {
                       maxWidth: 200
                     },
                     {
-                      Header: "Old Weight(%)",
+                      Header: "Current Weight(%)",
                       accessor: "old_weight",
                       Cell: props => {
                         return <span>{this.handleCurrentWeight(props)}</span>;
