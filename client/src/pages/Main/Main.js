@@ -208,6 +208,7 @@ class Main extends Component {
   };
 
   handleSubmit = () => {
+    console.log(this.state.value)
     this.performSearch(this.state.value);
     this.handleAlphaApi(this.state.value);
   };
@@ -395,13 +396,13 @@ class Main extends Component {
 
     return (portfolios[index].old_weight = currentWeight)
   };
-  testing = (props) => {
-    console.log(props);
-    const value = props.original.ticker
+  tickerClickSearch = (props) => {
+    const value = props.value
     this.setState({
       value: value
+    }, () =>{
+      this.handleSubmit();
     });
-    this.handleSubmit();
   }
   //current cash
   getCurrentCash = props => {
@@ -629,7 +630,7 @@ class Main extends Component {
                         Cell: props => (
                           <div
                             className="tickerBtn"
-                            onClick={() => this.testing(props)}
+                            onClick={() => this.tickerClickSearch(props)}
                           >
                             {props.original.ticker}
                           </div>
