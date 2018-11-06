@@ -16,8 +16,8 @@ import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
+import CloseSideBtn from "../../components/CloseSideBtn";
 import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
-
 initializeIcons();
 
 class Main extends Component {
@@ -44,6 +44,7 @@ class Main extends Component {
     this.setState({
       showsidebar: !this.state.showsidebar
     });
+
   };
 
   componentDidMount() {
@@ -324,6 +325,36 @@ class Main extends Component {
     return portfolios[index].newWeight;
   };
 
+
+  testing = () => {
+    console.log("click works");
+  };
+
+  handleHoldingTable = props => { 
+    
+    if (this.state.showsidebar) {
+      const portfolio = props.original.portfolio;
+      const oldWeight = props.original.old_weight;
+      const nav = props.original.NAV;
+      // console.log(oldWeight)
+      this.setState({
+        oldWeight: oldWeight,
+        NAV: nav,
+        portfolioname: portfolio
+      });
+      API.getHoldingsByPortfolio(portfolio)
+        .then(res => {
+          // console.log(res.data);
+          this.setupHoldingsData(res.data);
+        })
+        .catch(err => console.log(err));
+  }
+else{
+    this.toggleSideBar();
+  };
+  }
+  
+
   handleHoldingTable = props => {
     this.toggleSideBar();
     const portfolio = props.original.portfolio;
@@ -343,7 +374,7 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
-  //======================================================================================================
+
   showAllHoldings = () => {
     this.setState({
       portfolioname:"Holdings Table"
@@ -566,7 +597,7 @@ class Main extends Component {
           {/*======================================================= table 2 =======================================*/}
 
           <div className={`sideBar ${sidebarvis}`}>
-            {this.state.portfolioname}
+            {this.state.portfolioname} <CloseSideBtn onClick={() => this.toggleSideBar()} />
             {this.state.holdingsData.length ? (
               <ReactTable
               filterable
