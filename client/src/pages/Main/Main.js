@@ -211,7 +211,10 @@ class Main extends Component {
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
   handleStageSubmit = () => {
-    const portfolios = this.state.data;
+    const holdings = this.state.holdingsData;
+    const portfolios = this.state.data
+    portfolios.push(...holdings)
+    console.log(portfolios)
     portfolios.map(element => {
       if (element.changed) {
         this.handleSaveStages(element);
@@ -220,15 +223,16 @@ class Main extends Component {
   };
   // user [...]
   handleSaveStages = data => {
+    
     const save = {
       portfolio_manager: this.state.portfolio_manager,
-      ticker: this.state.ticker,
+      ticker: data.holdings ? data.ticker : this.state.ticker,
       portfolio: data.portfolio,
       old_weight: data.old_weight,
       new_weight: data.newWeight,
       shares_buy_sell: data.shares_buy_sell,
       buy_or_sell: data.buy_or_sell,
-      ticker_name: this.state.tickerName
+      ticker_name: data.holdings ? null : this.state.tickerName
     };
     console.log("this is : " + this.state.portfolio_manager);
     API.postStagingData(save)
@@ -258,16 +262,14 @@ class Main extends Component {
   calculateShares = props => {
     //event.preventDefault();
     console.log(props);
-    const portfolios = props.original.holdings
-      ? this.state.holdingsData
-      : this.state.data;
+    const portfolios = props.original.holdings? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
     // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
     // console.log(this.state.price);
     let weight =  portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    console.log(weight)
+    // console.log(weight)
     this.handleBuyOrSell(index, weight, portfolios);
     // console.log(weight)
     const price = props.original.holdings
@@ -288,9 +290,7 @@ class Main extends Component {
   };
 
   handleNewWeightChange = (props, event) => {
-    const portfolios = props.original.holdings
-      ? this.state.holdingsData
-      : this.state.data;
+    const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
@@ -389,8 +389,9 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return ((portfolios[index].cash = (cash / nav) * 100).toFixed(2));
+    return (portfolios[index].cash = ((cash / nav) * 100).toFixed(2));
   };
+
   render = () => {
     //console.log(this.state.data.length);
     // console.log(this.state.data);
