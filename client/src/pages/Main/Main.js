@@ -13,6 +13,7 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import SaveBtn from "../../components/saveBtn/saveBtn";
+import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn";
 import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
@@ -129,7 +130,7 @@ class Main extends Component {
     const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
     // console.log(portfolio)
     let sellOrBuy = "";
-    if (weight < 0) {
+    if (weight < portfolios[index].old_weight) {
       sellOrBuy = "Sell";
       return (portfolios[index].buy_or_sell = sellOrBuy);
     } else {
@@ -243,13 +244,14 @@ class Main extends Component {
 
   loadCashUpdate = props => {
     const trades = this.state.stagingData;
-    const index = trades.findIndex(element => {
-      return element.id === props.row.id;
+    const portfolioUpdate = this.state.data;
+
+    trades.map(element => {
+      return element.portfolio, element.old_weight, element.new_weight;
     });
 
-    const portfolio = trades[index].portfolio;
-    const oldWeight = trades[index].old_weight;
-    const newWeight = trades[index].new_weight;
+
+
 
     // for each trade, grab the portfolio and calculate new weight minus old weight 
     console.log(portfolio);
@@ -345,6 +347,15 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
 
+  showAllHoldings = () => {
+    this.toggleSideBar();
+    API.aggregateHoldings()
+      .then(res => {
+        this.setupHoldingsData(res.data);
+      })
+      .catch(err => console.log(err));
+  };
+
   setupHoldingsData = data => {
     data.map(element => {
       element.newWeight = "";
@@ -423,6 +434,10 @@ class Main extends Component {
           </div>
           <div className="savebuttondiv">
             <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+          </div>
+          
+          <div className="allholdingsdiv">
+            <HoldingsBtn showAllHoldings={this.showAllHoldings} />
           </div>
 
           <StockList
@@ -556,16 +571,12 @@ class Main extends Component {
                         show: false
                       },
                       {
-                        Header: "Tickers",
+                        Header: "Ticker",
                         accessor: "ticker"
                       },
                       {
                         Header: "Shares Owned",
                         accessor: "shares"
-                      },
-                      {
-                        Header: "Closing Price",
-                        accessor: "closeprice"
                       },
                       {
                         Header: "New Weight(%)",
