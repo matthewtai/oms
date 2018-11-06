@@ -325,7 +325,6 @@ class Main extends Component {
     return portfolios[index].newWeight;
   };
 
-
   testing = () => {
     console.log("click works");
   };
@@ -354,27 +353,6 @@ else{
   };
   }
   
-
-  handleHoldingTable = props => {
-    this.toggleSideBar();
-    const portfolio = props.original.portfolio;
-    const oldWeight = props.original.old_weight;
-    const nav = props.original.NAV;
-    // console.log(oldWeight)
-    this.setState({
-      oldWeight: oldWeight,
-      NAV: nav,
-      portfolioname: portfolio
-    });
-    API.getHoldingsByPortfolio(portfolio)
-      .then(res => {
-        console.log(res);
-        this.setupHoldingsData(res.data);
-      })
-      .catch(err => console.log(err));
-  };
-
-
   showAllHoldings = () => {
     this.setState({
       portfolioname:"Holdings Table"
