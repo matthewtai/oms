@@ -22,9 +22,25 @@ html {
   
 }
 
+.buttonsdiv{
+
+text-align: center;
+}
+
+.recordButton{
+  position: relative;
+  text-align: center;
+}
+
+.holdingsButton{
+ position: absolute;
+ right: 0;
+}
+
+
 .top {
   background:  rgb(33, 183, 233);
-  text-align: right;
+  /* text-align: right; */
  
 }
 
@@ -79,6 +95,10 @@ input[type="text"]:focus {
     width: calc(100%/8) !important ;
   } */
 
+.companytable{
+  height: 64vh;
+}
+
 .sideBar.hide{
 display:none;
 transition-timing-function: ease-in;
@@ -88,7 +108,7 @@ transform: translateX(130%);
 }
 .sideBar.show{
   border-left:1px solid  rgb(68, 54, 36);
-  width:40%;
+  width:30%;
   background-color: beige;
   -webkit-animation: slide-left .3s ease-out;
   -moz-animation: slide-left .3s ease-out;
@@ -126,10 +146,3 @@ transform: translateX(130%);
   width: 100%;
 }
 
-.savebuttondiv{
-  text-align: center;
-}
-
-.allholdingsdiv{
-  text-align: right;
-}
