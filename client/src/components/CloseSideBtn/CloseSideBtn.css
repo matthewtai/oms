@@ -1,14 +1,16 @@
 .closeside-btn {
-  color: rgb(42, 177, 223);
+  color: red;
   opacity: 0.5;
   cursor: pointer;
-  font-size: 1rem;
-  text-align: center;
+  font-size: 1em;
   border:none;
   background-color: transparent;
   outline:none;
   position: absolute;
-  right: 0
+  right: 2px;
+  
+ 
+  
 }
 .closeside-btn:hover{
   color: rgba(252, 54, 54, 0.993);

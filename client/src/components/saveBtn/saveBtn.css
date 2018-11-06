@@ -38,8 +38,9 @@
   border-radius: 15px 15px 0 0;
   transition: .4s;
   text-transform: uppercase;
-  margin-top: 5px;
+  /* margin-top: 2px; */
   cursor: pointer;
+  font-size: 0.8rem;
 }
 
   .recordButton:hover,

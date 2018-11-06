@@ -592,7 +592,7 @@ else{
           {/*======================================================= table 2 =======================================*/}
 
           <div className={`sideBar ${sidebarvis}`}>
-            {this.state.portfolioname} <CloseSideBtn onClick={() => this.toggleSideBar()} />
+            <span className = "tabletitlename">{this.state.portfolioname}</span> <CloseSideBtn onClick={() => this.toggleSideBar()} />
             {this.state.holdingsData.length ? (
               <ReactTable
               filterable
@@ -654,7 +654,7 @@ else{
         </div>
         {/* ======================================================= table 3 ======================================*/}
 
-        <div className="stagingtable">Staging Table
+        <div className="stagingtable"> <span className ="tabletitlename">Staging Table</span>
           {this.state.stagingData.length ? (
             <ReactTable
               data={this.state.stagingData}
