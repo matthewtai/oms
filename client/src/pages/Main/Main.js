@@ -35,7 +35,8 @@ class Main extends Component {
     holdingsData: [],
     oldWeight: 0,
     NAV: 0,
-    showsidebar: false
+    showsidebar: false,
+    portfolioname: ""
   };
 
   toggleSideBar = () => {
@@ -335,7 +336,8 @@ class Main extends Component {
     // console.log(oldWeight)
     this.setState({
       oldWeight: oldWeight,
-      NAV: nav
+      NAV: nav,
+      portfolioname: portfolio
     });
     API.getHoldingsByPortfolio(portfolio)
       .then(res => {
@@ -346,6 +348,9 @@ class Main extends Component {
   };
 
   showAllHoldings = () => {
+    this.setState({
+      portfolioname:"Holdings Table"
+    })
     this.toggleSideBar();
     API.aggregateHoldings()
       .then(res => {
@@ -426,12 +431,13 @@ class Main extends Component {
               />
             </div>
           </div>
-          <div className="savebuttondiv">
-            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
-          </div>
-          
-          <div className="allholdingsdiv">
-            <HoldingsBtn showAllHoldings={this.showAllHoldings} />
+
+          <div className ="buttonsdiv">
+            
+            <SaveBtn className = "recordButton" handleStageSubmit={this.handleStageSubmit} />
+            
+            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
+            
           </div>
 
           <StockList
@@ -550,9 +556,10 @@ class Main extends Component {
           {/*======================================================= table 2 =======================================*/}
 
           <div className={`sideBar ${sidebarvis}`}>
-            CALL PORTFOLIO NAME HERE
+            {this.state.portfolioname}
             {this.state.holdingsData.length ? (
               <ReactTable
+              filterable
                 data={this.state.holdingsData}
                 columns={[
                   {
@@ -562,54 +569,68 @@ class Main extends Component {
                         Header: "ID",
                         id: "id",
                         accessor: "id",
-                        show: false
+                        show: false,
+                        minWidth: 125
                       },
                       {
                         Header: "Ticker",
-                        accessor: "ticker"
+                        id: "ticker",
+                        accessor: d => d.ticker,
+                        filterMethod: (filter, rows) =>
+                        matchSorter(rows, filter.value, {
+                          keys: ["ticker"]
+                        }),
+                      filterAll: true,
+                      
+                      minWidth: 125
                       },
                       {
                         Header: "Shares Owned",
-                        accessor: "shares"
-                      },
-                      {
-                        Header: "New Weight(%)",
-                        filterable: false,
-                        Cell: props => (
-                          <div>
-                            <input
-                              type="text"
-                              id="input1"
-                              placeholder="%"
-                              style={{
-                                width: "50px"
-                              }}
-                              className="number"
-                              value={this.getnewWeightValue(props)}
-                              onChange={e =>
-                                this.handleNewWeightChange(props, e)
-                              }
-                            />
-                          </div>
-                        )
-                      },
-                      {
-                        Header: "Shares to Buy/Sell",
-                        accessor: "shares_buy_sell",
+                        accessor: "shares",
+                        minWidth: 125,
                         filterable: false
                       },
-                      {
-                        Header: "Buy Or Sell",
-                        accessor: "buy_or_sell",
-                        filterable: false
-                      }
+                      // {
+                      //   Header: "New Weight(%)",
+                      //   filterable: false,
+                      //   minWidth: 125,
+                      //   Cell: props => (
+                      //     <div>
+                      //       <input
+                      //         type="text"
+                      //         id="input1"
+                      //         placeholder="%"
+                      //         style={{
+                      //           width: "50px"
+                      //         }}
+                      //         className="number"
+                      //         value={this.getnewWeightValue(props)}
+                      //         onChange={e =>
+                      //           this.handleNewWeightChange(props, e)
+                      //         }
+                      //       />
+                      //     </div>
+                      //   )
+                      // },
+                      // {
+                      //   Header: "Shares to Buy/Sell",
+                      //   accessor: "shares_buy_sell",
+                      //   filterable: false,
+                      //   minWidth: 125
+                      // },
+                      // {
+                      //   Header: "Buy Or Sell",
+                      //   accessor: "buy_or_sell",
+                      //   filterable: false,
+                      //   minWidth: 125
+                      // }
                     ]
                   }
                 ]}
                 //defaultPageSize={10}
-                className="-striped -highlight"
-                showPagination={true}
-                pageSize={10}
+                className="-striped -highlight companytable"
+                showPagination={false}
+                pageSize={this.state.data.length}
               />
             ) : (
               <h2>NoData</h2>
