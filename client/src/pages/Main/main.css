@@ -8,6 +8,19 @@
   font-size: 0.7rem;
 }
 
+::-webkit-scrollbar {
+  width: 3px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+}
+::-webkit-scrollbar-thumb {
+  background: #888; 
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+}
+
 html {
   z-index: -1;
 
@@ -114,6 +127,7 @@ transition: 0.2s;
 transform: translateX(130%);
 
 }
+
 .sideBar.show{
   border-left:1px solid  rgb(68, 54, 36);
   width:30%;
