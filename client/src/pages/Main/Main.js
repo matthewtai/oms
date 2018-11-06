@@ -208,6 +208,7 @@ class Main extends Component {
   };
 
   handleSubmit = () => {
+    console.log(this.state.value)
     this.performSearch(this.state.value);
     this.handleAlphaApi(this.state.value);
   };
@@ -336,7 +337,7 @@ class Main extends Component {
     });
     API.getHoldingsByPortfolio(portfolio)
       .then(res => {
-        // console.log(res.data);
+        console.log(res);
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
@@ -350,12 +351,14 @@ class Main extends Component {
     this.toggleSideBar();
     API.aggregateHoldings()
       .then(res => {
+        console.log(res)
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
   };
 
   setupHoldingsData = data => {
+    console.log(data)
     data.map(element => {
       element.newWeight = "";
       element.changed = false;
@@ -364,6 +367,7 @@ class Main extends Component {
       element.old_weight = this.state.oldWeight;
       element.NAV = this.state.NAV;
       element.buy_or_sell = "";
+      // element.total_ticker_price = this.data.SUM;
     });
     this.setState({
       holdingsData: data
@@ -392,7 +396,14 @@ class Main extends Component {
 
     return (portfolios[index].old_weight = currentWeight)
   };
-
+  tickerClickSearch = (props) => {
+    const value = props.value
+    this.setState({
+      value: value
+    }, () =>{
+      this.handleSubmit();
+    });
+  }
   //current cash
   getCurrentCash = props => {
     const portfolios = this.state.data;
@@ -427,21 +438,23 @@ class Main extends Component {
                 onSearch={this.handleSubmit}
               />
             </div>
-          </div>
-
-          <div className ="buttonsdiv">
-            
-            <SaveBtn className = "recordButton" handleStageSubmit={this.handleStageSubmit} />
-            
-            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
-            
-          </div>
-
-          <StockList
+            <div><StockList
             currency={this.state.currency}
             tickerName={this.state.tickerName}
             stockItems={this.state.stocks}
           />
+          </div>
+          </div>
+          
+          <div className ="buttonsdiv">
+         
+            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+            
+            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
+            
+          </div>
+        
+         
         </div>
         {/* ==========================================            Table 1                  =============================== */}
         <div className="tableandbar">
@@ -614,13 +627,26 @@ class Main extends Component {
                         matchSorter(rows, filter.value, {
                           keys: ["ticker"]
                         }),
-                      filterAll: true,
-                      
-                      minWidth: 125
+                        Cell: props => (
+                          <div
+                            className="tickerBtn"
+                            onClick={() => this.tickerClickSearch(props)}
+                          >
+                            {props.original.ticker}
+                          </div>
+                        ),
+                        filterAll: true,
+                        minWidth: 125
                       },
                       {
                         Header: "Shares Owned",
                         accessor: "shares",
+                        minWidth: 125,
+                        filterable: false
+                      },
+                      {
+                        Header: "Total Shares($)",
+                        accessor: "SUM",
                         minWidth: 125,
                         filterable: false
                       },
@@ -664,7 +690,7 @@ class Main extends Component {
                 //defaultPageSize={10}
                 className="-striped -highlight companytable"
                 showPagination={false}
-                pageSize={this.state.data.length}
+                pageSize={this.state.holdingsData.length}
               />
             ) : (
               <h2>NoData</h2>

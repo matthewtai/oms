@@ -23,27 +23,30 @@ html {
 }
 
 .buttonsdiv{
+  text-align: center; 
+  position:relative; 
+  width: 100%;
 
-text-align: center;
+
 }
 
 .recordButton{
-  position: relative;
-  text-align: center;
+  background: red;
+  border: 0.5px solid red;
+  border-bottom: solid 4px red;
 }
 
 .holdingsButton{
- position: absolute;
- right: 0;
+  position: absolute; 
+  right: 0;
+  margin-right: 5px;
 }
 
 
 .top {
-  background:  rgb(33, 183, 233);
-  /* text-align: right; */
- 
-}
-
+  background:rgb(42, 177, 223);
+};
+  
 #SearchBox0 {
   font-family: "Nunito Sans", sans-serif;
   color: rgb(68, 54, 36);
@@ -70,6 +73,7 @@ input[type="text"]:focus {
 }
 
 .logodiv{
+  margin: 5px;
   display: inline;
 }
 
