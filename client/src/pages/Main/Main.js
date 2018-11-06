@@ -18,7 +18,7 @@ import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
 import CloseSideBtn from "../../components/CloseSideBtn";
 import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
-<<<<<<< HEAD
+
 
 initializeIcons();
 
