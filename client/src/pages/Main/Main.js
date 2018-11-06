@@ -430,21 +430,23 @@ class Main extends Component {
                 onSearch={this.handleSubmit}
               />
             </div>
-          </div>
-
-          <div className ="buttonsdiv">
-            
-            <SaveBtn className = "recordButton" handleStageSubmit={this.handleStageSubmit} />
-            
-            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
-            
-          </div>
-
-          <StockList
+            <div><StockList
             currency={this.state.currency}
             tickerName={this.state.tickerName}
             stockItems={this.state.stocks}
           />
+          </div>
+          </div>
+          
+          <div className ="buttonsdiv">
+         
+            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+            
+            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
+            
+          </div>
+        
+         
         </div>
         {/* ==========================================            Table 1                  =============================== */}
         <div className="tableandbar">
@@ -630,7 +632,7 @@ class Main extends Component {
                 //defaultPageSize={10}
                 className="-striped -highlight companytable"
                 showPagination={false}
-                pageSize={this.state.data.length}
+                pageSize={this.state.holdingsData.length}
               />
             ) : (
               <h2>NoData</h2>
