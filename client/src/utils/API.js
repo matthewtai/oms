@@ -42,8 +42,10 @@ export default {
   },
   getAllHoldings: function(){
     return axios.get("/api/all/Holdings")
+  },
+  aggregateHoldings: function(){
+    return axios.get("/api/aggregate/Holdings")
   }
-  
   // // Saves a book to the database
   // saveBook: function(bookData) {
   //   return axios.post("/api/books", bookData);
