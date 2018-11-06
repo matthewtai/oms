@@ -49,8 +49,6 @@ class Main extends Component {
 
   componentDidMount() {
     this.loadPortfolios();
-    //this.performSearch();
-    //this.handleAlphaApi();
     this.loadStagingData();
     this.handlePortfolioManager();
     this.handleAllHolding();
@@ -77,7 +75,7 @@ class Main extends Component {
     API.getHoldings(tickerName)
       .then(res => {
         let mainData = this.state.data;
-        console.log(mainData);
+        //console.log(mainData);
         mainData.map(main => {
           let index = res.data.findIndex(obj => {
             return obj.portfolio === main.portfolio;
@@ -96,6 +94,7 @@ class Main extends Component {
   };
 
   setupData = data => {
+
     data.map(element => {
       element.newWeight = "";
       element.changed = false;
@@ -107,15 +106,16 @@ class Main extends Component {
 
   loadStagingData = () => {
     API.getStaging().then(res => {
-      console.log(res);
+      //console.log(res);
       this.setState({
         stagingData: res.data
       });
+      this.setupCurrentCash();
     });
   };
 
   deleteStaging = props => {
-    console.log(props.original.id);
+    //console.log(props.original.id);
     API.deleteStagingRow(props.original.id).then(res => {
       this.loadStagingData();
     });
@@ -158,7 +158,7 @@ class Main extends Component {
           ])
         );
         // let stocks = _.flattenDeep([res.data])
-        console.log(stocks);
+        //console.log(stocks);
         this.setState({
           ticker: res.data["Global Quote"]["01. symbol"],
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
@@ -184,7 +184,7 @@ class Main extends Component {
           tickerName: namecurrency[0]["2. name"],
           currency: namecurrency[0]["8. currency"]
         });
-        console.log(namecurrency);
+        //console.log(namecurrency);
         // console.log(this.state.currency);
         this.handleAlphaApiCurrency(this.state.currency);
       })
@@ -199,7 +199,7 @@ class Main extends Component {
         const exchangerate = _.flattenDeep([
           res.data["Realtime Currency Exchange Rate"]
         ]);
-        console.log(exchangerate);
+        //console.log(exchangerate);
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
@@ -239,7 +239,7 @@ class Main extends Component {
       buy_or_sell: data.buy_or_sell,
       ticker_name: data.holdings ? null : this.state.tickerName
     };
-    console.log("this is : " + this.state.portfolio_manager);
+    //console.log("this is : " + this.state.portfolio_manager);
     API.postStagingData(save)
       .then(res => {
         this.loadStagingData();
@@ -259,8 +259,9 @@ class Main extends Component {
     const oldWeight = trades[index].old_weight;
     const newWeight = trades[index].new_weight;
 
-    // for each trade, grab the portfolio and calculate new weight minus old weight 
-    // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
+  //   // for each trade, grab the portfolio and calculate new weight minus old weight 
+  //   console.log(portfolio);
+  //   // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
 
   };
 
@@ -382,7 +383,7 @@ else{
       holdingsData: data
     });
     // console.log(this.state.data)
-    console.log(this.state.holdingsData);
+    //console.log(this.state.holdingsData);
   };
 
   handleAllHolding = () => {
@@ -403,7 +404,7 @@ else{
     const nav = portfolios[index].NAV;
     let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
 
-    return (portfolios[index].old_weight = currentWeight)
+    return (portfolios[index].old_weight = currentWeight);
   };
   tickerClickSearch = (props) => {
     const value = props.value
@@ -414,14 +415,30 @@ else{
     });
   }
   //current cash
-  getCurrentCash = props => {
-    const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    const nav = portfolios[index].NAV;
-    const cash = portfolios[index].cash;
-    return (portfolios[index].cash = ((cash / nav) * 100).toFixed(2));
+  setupCurrentCash = () => {
+    let portfolios = this.state.data;
+    let staging = this.state.stagingData;
+    // const index = portfolios.findIndex(element => {
+    //   return element.id === props.row.id;
+    // });
+    portfolios.map(element => {
+      const nav = element.NAV;
+      const cash = element.cash;
+      let oldweight = 0;
+      let newWeight = 0;
+      const index = staging.findIndex(stagingItem => {
+          if(stagingItem.portfolio === element.portfolio /*&& stagingItem.ticker_name === this.state.tickerName*/){
+            return stagingItem;
+          }
+        });
+      if(index > -1){
+        oldweight = staging[index].old_weight;
+        newWeight = staging[index].new_weight;
+      }
+      element.currentCash = (((cash/nav)*100)-(newWeight-oldweight)).toFixed(2);
+    })
+    //console.log(portfolios);
+    this.setState({data : portfolios});
   };
 
   render = () => {
@@ -448,10 +465,11 @@ else{
               />
             </div>
             <div><StockList
-            currency={this.state.currency}
-            tickerName={this.state.tickerName}
-            stockItems={this.state.stocks}
-          />
+              key={this.state.tickerName}
+              currency={this.state.currency}
+              tickerName={this.state.tickerName}
+              stockItems={this.state.stocks}
+            />
           </div>
           </div>
           
@@ -507,15 +525,15 @@ else{
                     },
                     {
                       Header: "Current Cash(%)",
-                      accessor: "cash",
-                      Cell: props => {
-                        return <span>{this.getCurrentCash(props)}</span>;
-                      },
+                      accessor: "currentCash",
+                      // Cell: props => {
+                      //   return <span>{this.getCurrentCash(props)}</span>;
+                      // },
                       filterable: false,
                       maxWidth: 200
                     },
                     {
-                      Header: "Old Weight(%)",
+                      Header: "Current Weight(%)",
                       accessor: "old_weight",
                       Cell: props => {
                         return <span>{this.handleCurrentWeight(props)}</span>;
