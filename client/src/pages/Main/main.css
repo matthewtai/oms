@@ -110,18 +110,25 @@ input[type="text"]:focus {
   color: #999;
  
 }
-
-.portfoliotable.show{
+.portfoliotablespan{
+font-weight: bold;
+}
+.portfoliotablediv.hide{
+  width:100%;
+}
+.portfoliotablediv.show{
   width:70%;
+}
+.portfoliotable.show{
   background-color: white;
+  height: 63.7vh;
 }
 .portfoliotable.hide{
+  order: 1;
   width:100%;
   background-color: white;
+  height: 63.7vh;
 }
-/* .ReactTable .rt-th {
-    width: calc(100%/8) !important ;
-  } */
 
 .companytable{
   height: 63.7vh;

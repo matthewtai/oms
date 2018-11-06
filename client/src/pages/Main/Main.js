@@ -484,6 +484,7 @@ else{
         </div>
         {/* ==========================================            Table 1                  =============================== */}
         <div className="tableandbar">
+        <div className={` portfoliotablediv ${sidebarvis}`}><span className = "portfoliotablespan">Portfolio Table</span> 
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
@@ -589,6 +590,7 @@ else{
           ) : (
             <h2>NoData</h2>
           )}
+          </div>
           {/*======================================================= table 2 =======================================*/}
 
           <div className={`sideBar ${sidebarvis}`}>
