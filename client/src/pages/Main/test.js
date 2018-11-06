@@ -13,6 +13,7 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import SaveBtn from "../../components/saveBtn/saveBtn";
+import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn";
 import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
@@ -128,7 +129,7 @@ class Main extends Component {
     const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
     // console.log(portfolio)
     let sellOrBuy = "";
-    if (weight < 0) {
+    if (weight < portfolios[index].old_weight) {
       sellOrBuy = "Sell";
       return (portfolios[index].buy_or_sell = sellOrBuy);
     } else {
@@ -211,10 +212,7 @@ class Main extends Component {
 
   //((new weight - old weight) *x* NAV) */* (price per share *x* FX rate)
   handleStageSubmit = () => {
-    const holdings = this.state.holdingsData;
-    const portfolios = this.state.data
-    portfolios.push(...holdings)
-    console.log(portfolios)
+    const portfolios = this.state.data;
     portfolios.map(element => {
       if (element.changed) {
         this.handleSaveStages(element);
@@ -223,16 +221,15 @@ class Main extends Component {
   };
   // user [...]
   handleSaveStages = data => {
-    
     const save = {
       portfolio_manager: this.state.portfolio_manager,
-      ticker: data.holdings ? data.ticker : this.state.ticker,
+      ticker: this.state.ticker,
       portfolio: data.portfolio,
       old_weight: data.old_weight,
       new_weight: data.newWeight,
       shares_buy_sell: data.shares_buy_sell,
       buy_or_sell: data.buy_or_sell,
-      ticker_name: data.holdings ? null : this.state.tickerName
+      ticker_name: this.state.tickerName
     };
     console.log("this is : " + this.state.portfolio_manager);
     API.postStagingData(save)
@@ -246,13 +243,14 @@ class Main extends Component {
 
   loadCashUpdate = props => {
     const trades = this.state.stagingData;
-    const index = trades.findIndex(element => {
-      return element.id === props.row.id;
+    const portfolioUpdate = this.state.data;
+
+    trades.map(element => {
+      return element.portfolio, element.old_weight, element.new_weight;
     });
 
-    const portfolio = trades[index].portfolio;
-    const oldWeight = trades[index].old_weight;
-    const newWeight = trades[index].new_weight;
+
+
 
     // for each trade, grab the portfolio and calculate new weight minus old weight 
     // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
@@ -262,17 +260,21 @@ class Main extends Component {
   calculateShares = props => {
     //event.preventDefault();
     console.log(props);
-    const portfolios = props.original.holdings? this.state.holdingsData : this.state.data;
+    const portfolios = props.original.holdings
+      ? this.state.holdingsData
+      : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
     // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
     // console.log(this.state.price);
     let weight =  portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    // console.log(weight)
+    console.log(weight)
     this.handleBuyOrSell(index, weight, portfolios);
     // console.log(weight)
-    const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
+    const price = props.original.holdings
+      ? portfolios[index].closeprice
+      : this.state.price;
     if (weight < 0) {
       let newShares =
         (Math.abs(weight) * portfolios[index].NAV) /
@@ -286,7 +288,6 @@ class Main extends Component {
         Math.round(newShares / 100) * 100);
     }
   };
-
 
   handleNewWeightChange = (props, event) => {
     const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
@@ -320,6 +321,8 @@ class Main extends Component {
     return portfolios[index].newWeight;
   };
 
+
+
   handleHoldingTable = props => {
     this.toggleSideBar();
     const portfolio = props.original.portfolio;
@@ -333,6 +336,15 @@ class Main extends Component {
     API.getHoldingsByPortfolio(portfolio)
       .then(res => {
         // console.log(res.data);
+        this.setupHoldingsData(res.data);
+      })
+      .catch(err => console.log(err));
+  };
+
+  showAllHoldings = () => {
+    this.toggleSideBar();
+    API.aggregateHoldings()
+      .then(res => {
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
@@ -384,9 +396,8 @@ class Main extends Component {
     });
     const nav = portfolios[index].NAV;
     const cash = portfolios[index].cash;
-    return (portfolios[index].cash = ((cash / nav) * 100).toFixed(2));
+    return ((portfolios[index].cash = (cash / nav) * 100).toFixed(2));
   };
-
   render = () => {
     //console.log(this.state.data.length);
     // console.log(this.state.data);
@@ -413,6 +424,10 @@ class Main extends Component {
           </div>
           <div className="savebuttondiv">
             <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+          </div>
+          
+          <div className="allholdingsdiv">
+            <HoldingsBtn showAllHoldings={this.showAllHoldings} />
           </div>
 
           <StockList
@@ -471,7 +486,7 @@ class Main extends Component {
                       maxWidth: 200
                     },
                     {
-                      Header: "Old Weight(%)",
+                      Header: "Current Weight(%)",
                       accessor: "old_weight",
                       Cell: props => {
                         return <span>{this.handleCurrentWeight(props)}</span>;
@@ -546,16 +561,12 @@ class Main extends Component {
                         show: false
                       },
                       {
-                        Header: "Tickers",
+                        Header: "Ticker",
                         accessor: "ticker"
                       },
                       {
                         Header: "Shares Owned",
                         accessor: "shares"
-                      },
-                      {
-                        Header: "Closing Price",
-                        accessor: "closeprice"
                       },
                       {
                         Header: "New Weight(%)",
