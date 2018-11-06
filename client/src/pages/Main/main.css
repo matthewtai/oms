@@ -20,7 +20,9 @@
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
 }
-
+body{
+  background-color: #fffafa
+}
 .SearchBar {
   margin-left: 2em;
   margin-top: 2em;
@@ -28,6 +30,14 @@
   width: 150px;
   
   
+}
+
+.ms-SearchBox.root-37{
+  border-radius: 15px;
+}
+
+.ms-SearchBox.is-active.root-44{
+  border-radius: 15px;
 }
 
 .buttonsdiv{
@@ -103,9 +113,11 @@ input[type="text"]:focus {
 
 .portfoliotable.show{
   width:70%;
+  background-color: white;
 }
 .portfoliotable.hide{
   width:100%;
+  background-color: white;
 }
 /* .ReactTable .rt-th {
     width: calc(100%/8) !important ;
@@ -113,6 +125,11 @@ input[type="text"]:focus {
 
 .companytable{
   height: 63.7vh;
+  background-color: beige;
+}
+
+.tabletitlename{
+font-weight: bold;
 }
 
 .sideBar.hide{
@@ -127,7 +144,6 @@ transform: translateX(130%);
   margin-left:5px;
   /* border-left: 1px solid  rgb(68, 54, 36); */
   width:30%;
-  background-color: beige;
   -webkit-animation: slide-left .3s ease-out;
   -moz-animation: slide-left .3s ease-out;
 }
@@ -153,7 +169,8 @@ transform: translateX(130%);
 }
 
 .ReactTable{
-  box-shadow: 0px 3px 15px rgba(0,0,0,0.2)
+  box-shadow: 0px 3px 15px rgba(0,0,0,0.2);
+  border-radius: 10px;  
 }
 
 .portfolioBtn{
@@ -166,6 +183,7 @@ transform: translateX(130%);
   padding-left:5px;
   padding-right:5px;
   padding-top:5px;
+  background-color: white;
 }
 
 .SearchandImage{
