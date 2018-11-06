@@ -45,7 +45,9 @@
 
   .recordButton:hover,
   .recordButton:focus {
-    
+    background: rgba(250, 85, 85, 0.993);
+  border: 0.5px solid rgba(252, 54, 54, 0.993);
+  border-bottom: solid 4px rgba(252, 54, 54, 0.993);
     color: white;
     outline: 1;
   }

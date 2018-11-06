@@ -17,7 +17,9 @@
 
   .btnn:hover,
   .btnn:focus {
-    
+    background-color:  rgb(255, 192, 82);
+    border: 0.5px solid rgb(255, 192, 82);
+    border-bottom: solid 4px rgb(255, 192, 82);
     color: white;
     outline: 1;
   }

@@ -95,8 +95,8 @@ input[type="text"]:focus {
 }
 
 .logodiv{
-  margin: 5px;
-  display: inline;
+ padding-top:30px;
+ padding-left: 20px;
 }
 
 .logoMain {
@@ -121,17 +121,17 @@ font-weight: bold;
 }
 .portfoliotable.show{
   background-color: white;
-  height: 63.7vh;
+  height: 62vh;
 }
 .portfoliotable.hide{
   order: 1;
   width:100%;
   background-color: white;
-  height: 63.7vh;
+  height: 62vh;
 }
 
 .companytable{
-  height: 63.7vh;
+  height: 62vh;
   background-color: beige;
 }
 
@@ -169,7 +169,7 @@ transform: translateX(130%);
   display:flex;
   padding-top: 5px;
   width:100%;
-  height: 66vh;
+  height: 64vh;
   border-top: 1px solid  rgb(68, 54, 36);
   padding-left:5px;
   padding-right: 5px;
@@ -195,7 +195,8 @@ transform: translateX(130%);
 
 .SearchandImage{
   display: flex;
-  text-align: center;
+  align-items: baseline;
   width: 100%;
+ 
 }
 
