@@ -20,8 +20,6 @@ import CloseSideBtn from "../../components/CloseSideBtn";
 import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
 <<<<<<< HEAD
 
-=======
->>>>>>> 2b86388480b491bfa39421968e5623d7a869bd57
 initializeIcons();
 
 class Main extends Component {
@@ -329,10 +327,6 @@ class Main extends Component {
     return portfolios[index].newWeight;
   };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 2b86388480b491bfa39421968e5623d7a869bd57
   testing = () => {
     console.log("click works");
   };
@@ -361,30 +355,6 @@ else{
   };
   }
   
-<<<<<<< HEAD
-=======
-
-  handleHoldingTable = props => {
-    this.toggleSideBar();
-    const portfolio = props.original.portfolio;
-    const oldWeight = props.original.old_weight;
-    const nav = props.original.NAV;
-    // console.log(oldWeight)
-    this.setState({
-      oldWeight: oldWeight,
-      NAV: nav,
-      portfolioname: portfolio
-    });
-    API.getHoldingsByPortfolio(portfolio)
-      .then(res => {
-        console.log(res);
-        this.setupHoldingsData(res.data);
-      })
-      .catch(err => console.log(err));
-  };
-
-
->>>>>>> 2b86388480b491bfa39421968e5623d7a869bd57
   showAllHoldings = () => {
     this.setState({
       portfolioname:"Holdings Table"
