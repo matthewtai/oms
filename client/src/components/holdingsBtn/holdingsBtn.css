@@ -1,23 +1,27 @@
 .btnn {
-    background-color: 	#ff8007;
-    border: 0.5px solid 	#ff8007;
-    border-radius: 0.6em;
-    color: white;
-    cursor: pointer;
-    font-size: 0.8rem;
-    font-weight: 400;
-    line-height: 1;
-    margin-bottom: 1em;
-    padding: 1em 1.5em;
-    text-transform: uppercase;
-  }
-  .btn:hover,
-  .btn:focus {
+  display: inline-block;
+  font-weight: bold;
+  padding: 8px 10px 5px 10px;
+  text-decoration: none;
+  color:  rgb(68, 54, 36);
+  background: #FFA000;
+  border: 0.5px solid #FFA000;
+  border-bottom: solid 4px #FFA000;
+  border-radius: 15px 15px 0 0;
+  transition: .4s;
+  text-transform: uppercase;
+  margin-top: 5px;
+  cursor: pointer;
+}
+
+  .btnn:hover,
+  .btnn:focus {
+    
     color: white;
     outline: 1;
   }
   
-  .first {
+  /* .first {
     transition: box-shadow 300ms ease-in-out, color 300ms ease-in-out,
       opacity 300ms ease-in-out;
   }
@@ -25,4 +29,4 @@
     box-shadow: 0 0 40px 40px 	#ff8007 inset;
     opacity: 0.5;
   }
-  
+   */
