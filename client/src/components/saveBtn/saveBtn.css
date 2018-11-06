@@ -1,4 +1,4 @@
-.btnn {
+/* .btnn {
   background-color: 	#ff8007;
   border: 0.5px solid 	#ff8007;
   border-radius: 0.6em;
@@ -24,4 +24,27 @@
 .first:hover {
   box-shadow: 0 0 40px 40px 	#ff8007 inset;
   opacity: 0.5;
+} */
+
+.recordButton {
+  display: inline-block;
+  font-weight: bold;
+  padding: 8px 10px 5px 10px;
+  text-decoration: none;
+  color:  rgb(68, 54, 36);
+  background: rgba(252, 54, 54, 0.993);
+  border: 0.5px solid rgba(252, 54, 54, 0.993);
+  border-bottom: solid 4px rgba(252, 54, 54, 0.993);
+  border-radius: 15px 15px 0 0;
+  transition: .4s;
+  text-transform: uppercase;
+  margin-top: 5px;
+  cursor: pointer;
 }
+
+  .recordButton:hover,
+  .recordButton:focus {
+    
+    color: white;
+    outline: 1;
+  }
