@@ -9,7 +9,7 @@ module.exports = function(app) {
     // db.Holdings.findAll({
     // attributes : [[sequelize.fn('DISTINCT', sequelize.col('shares')), 'ticker']]
     }).then(function(result) {
-      console.log(result);
+      // console.log(result);
       res.json(result);
     });
   });
