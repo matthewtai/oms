@@ -13,7 +13,6 @@ import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
 import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import SaveBtn from "../../components/saveBtn/saveBtn";
-import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn";
 import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
@@ -129,7 +128,7 @@ class Main extends Component {
     const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
     // console.log(portfolio)
     let sellOrBuy = "";
-    if (weight < portfolios[index].old_weight) {
+    if (weight < 0) {
       sellOrBuy = "Sell";
       return (portfolios[index].buy_or_sell = sellOrBuy);
     } else {
@@ -247,14 +246,13 @@ class Main extends Component {
 
   loadCashUpdate = props => {
     const trades = this.state.stagingData;
-    const portfolioUpdate = this.state.data;
-
-    trades.map(element => {
-      return element.portfolio, element.old_weight, element.new_weight;
+    const index = trades.findIndex(element => {
+      return element.id === props.row.id;
     });
 
-
-
+    const portfolio = trades[index].portfolio;
+    const oldWeight = trades[index].old_weight;
+    const newWeight = trades[index].new_weight;
 
     // for each trade, grab the portfolio and calculate new weight minus old weight 
     // then subtract that number from that portfolio's current cash in the portfolio table's state (not the db!)
@@ -274,9 +272,7 @@ class Main extends Component {
     // console.log(weight)
     this.handleBuyOrSell(index, weight, portfolios);
     // console.log(weight)
-    const price = props.original.holdings
-      ? portfolios[index].closeprice
-      : this.state.price;
+    const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
     if (weight < 0) {
       let newShares =
         (Math.abs(weight) * portfolios[index].NAV) /
@@ -290,6 +286,7 @@ class Main extends Component {
         Math.round(newShares / 100) * 100);
     }
   };
+
 
   handleNewWeightChange = (props, event) => {
     const portfolios = props.original.holdings ? this.state.holdingsData : this.state.data;
@@ -340,15 +337,6 @@ class Main extends Component {
     API.getHoldingsByPortfolio(portfolio)
       .then(res => {
         // console.log(res.data);
-        this.setupHoldingsData(res.data);
-      })
-      .catch(err => console.log(err));
-  };
-
-  showAllHoldings = () => {
-    this.toggleSideBar();
-    API.aggregateHoldings()
-      .then(res => {
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
@@ -430,10 +418,6 @@ class Main extends Component {
           <div className="savebuttondiv">
             <SaveBtn handleStageSubmit={this.handleStageSubmit} />
           </div>
-          
-          <div className="allholdingsdiv">
-            <HoldingsBtn showAllHoldings={this.showAllHoldings} />
-          </div>
 
           <StockList
             currency={this.state.currency}
@@ -491,7 +475,7 @@ class Main extends Component {
                       maxWidth: 200
                     },
                     {
-                      Header: "Current Weight(%)",
+                      Header: "Old Weight(%)",
                       accessor: "old_weight",
                       Cell: props => {
                         return <span>{this.handleCurrentWeight(props)}</span>;
@@ -566,12 +550,16 @@ class Main extends Component {
                         show: false
                       },
                       {
-                        Header: "Ticker",
+                        Header: "Tickers",
                         accessor: "ticker"
                       },
                       {
                         Header: "Shares Owned",
                         accessor: "shares"
+                      },
+                      {
+                        Header: "Closing Price",
+                        accessor: "closeprice"
                       },
                       {
                         Header: "New Weight(%)",
