@@ -378,28 +378,23 @@ class Main extends Component {
     });
     const shares = portfolios[index].shares_owned;
     const nav = portfolios[index].NAV;
-<<<<<<< HEAD
-    let currentWeight = (
-      ((shares * this.state.price * this.state.exchangerate) / nav) *
-      100
-    ).toFixed(2);
-      
-    return currentWeight;
-=======
     let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
 
-    return (portfolios[index].old_weight = currentWeight)
->>>>>>> d8526f317718812d92e66269dc93445b5c2fe3b2
+    return (portfolios[index].old_weight = currentWeight);
   };
 
   //current cash
   getCurrentCash = props => {
     const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    const nav = portfolios[index].NAV;
-    const cash = portfolios[index].cash;
+    let currentCash;
+    // const index = portfolios.findIndex(element => {
+    //   return element.id === props.row.id;
+    // });
+    portfolios.map(element => {
+      const nav = element.NAV;
+      const cash = element.cash;
+      currentCash = ((cash/nav)*100).toFixed(2);
+    })
     return ((portfolios[index].cash = (cash / nav) * 100).toFixed(2));
   };
   render = () => {
