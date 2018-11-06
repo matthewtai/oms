@@ -36,6 +36,10 @@ html {
   border-bottom: solid 4px red;
 }
 
+.tickerBtn{
+  cursor: pointer;
+}
+
 .holdingsButton{
   position: absolute; 
   right: 0;
