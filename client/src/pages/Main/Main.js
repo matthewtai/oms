@@ -346,25 +346,56 @@ class Main extends Component {
         .then(res => {
           // console.log(res.data);
           this.setupHoldingsData(res.data);
+          
         })
         .catch(err => console.log(err));
   }
 else{
     this.toggleSideBar();
+    const portfolio = props.original.portfolio;
+    const oldWeight = props.original.old_weight;
+    const nav = props.original.NAV;
+    // console.log(oldWeight)
+    this.setState({
+      oldWeight: oldWeight,
+      NAV: nav,
+      portfolioname: portfolio
+    });
+    API.getHoldingsByPortfolio(portfolio)
+      .then(res => {
+        // console.log(res.data);
+        this.setupHoldingsData(res.data);
+        
+      })
+      .catch(err => console.log(err));
   };
   }
   
   showAllHoldings = () => {
+    if (this.state.showsidebar){
     this.setState({
       portfolioname:"Holdings Table"
     })
-    this.toggleSideBar();
+   
     API.aggregateHoldings()
       .then(res => {
         console.log(res)
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
+    }
+      else
+      { this.toggleSideBar(); this.setState({
+        portfolioname:"Holdings Table"
+      })
+     
+      API.aggregateHoldings()
+        .then(res => {
+          console.log(res)
+          this.setupHoldingsData(res.data);
+        })
+        .catch(err => console.log(err));
+      }
   };
 
   setupHoldingsData = data => {
