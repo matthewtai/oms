@@ -62,10 +62,6 @@ class Main extends Component {
   loadPortfolios = () => {
     API.getPortfolios()
       .then(res => {
-        //console.log(res.data)
-        // this.setState({
-        //   data: res.data
-        // });
         this.setupData(res.data);
       })
       .catch(err => console.log(err));
@@ -87,7 +83,6 @@ class Main extends Component {
             main.shares_owned = 0;
           }
         });
-        //console.log(mainData);
         this.setState({ data: mainData });
       })
       .catch(err => console.log(err));
@@ -106,7 +101,6 @@ class Main extends Component {
 
   loadStagingData = () => {
     API.getStaging().then(res => {
-      //console.log(res);
       this.setState({
         stagingData: res.data
       });
@@ -115,7 +109,6 @@ class Main extends Component {
   };
 
   deleteStaging = props => {
-    //console.log(props.original.id);
     API.deleteStagingRow(props.original.id).then(res => {
       this.loadStagingData();
     });
@@ -130,7 +123,6 @@ class Main extends Component {
 
   handleBuyOrSell = (index, weight, portfolio) => {
     const portfolios = portfolio[0].holdings ? this.state.holdingsData : this.state.data;
-    // console.log(portfolio)
     let sellOrBuy = "";
     if (weight < 0) {
       sellOrBuy = "Sell";
@@ -177,15 +169,13 @@ class Main extends Component {
   handleAlphaApi = query => {
     API.getSearch(query)
       .then(res => {
-        // console.log(res);
+
 
         const namecurrency = _.flattenDeep(res.data.bestMatches);
         this.setState({
           tickerName: namecurrency[0]["2. name"],
           currency: namecurrency[0]["8. currency"]
         });
-        //console.log(namecurrency);
-        // console.log(this.state.currency);
         this.handleAlphaApiCurrency(this.state.currency);
       })
       .catch(err => console.log(err));
@@ -194,16 +184,12 @@ class Main extends Component {
   handleAlphaApiCurrency = query => {
     API.getExchange(query)
       .then(res => {
-        //console.log(res);
-
         const exchangerate = _.flattenDeep([
           res.data["Realtime Currency Exchange Rate"]
         ]);
-        //console.log(exchangerate);
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
-        //console.log(this.state.exchangerate);
       })
       .catch(err => console.log(err));
   };
@@ -239,7 +225,7 @@ class Main extends Component {
       buy_or_sell: data.buy_or_sell,
       ticker_name: data.holdings ? null : this.state.tickerName
     };
-    //console.log("this is : " + this.state.portfolio_manager);
+
     API.postStagingData(save)
       .then(res => {
         this.loadStagingData();
@@ -272,12 +258,8 @@ class Main extends Component {
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
-    // let newShares = portfolios[index].cash*(portfolios[index].newWeight/100);
-    // console.log(this.state.price);
     let weight =  portfolios[index].newWeight / 100 - portfolios[index].old_weight / 100;
-    // console.log(weight)
     this.handleBuyOrSell(index, weight, portfolios);
-    // console.log(weight)
     const price = props.original.holdings ? portfolios[index].closeprice : this.state.price;
     if (weight < 0) {
       let newShares =
@@ -322,7 +304,6 @@ class Main extends Component {
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
     });
-    // console.log(index)
     return portfolios[index].newWeight;
   };
 
@@ -336,7 +317,6 @@ class Main extends Component {
       const portfolio = props.original.portfolio;
       const oldWeight = props.original.old_weight;
       const nav = props.original.NAV;
-      // console.log(oldWeight)
       this.setState({
         oldWeight: oldWeight,
         NAV: nav,
@@ -344,9 +324,7 @@ class Main extends Component {
       });
       API.getHoldingsByPortfolio(portfolio)
         .then(res => {
-          // console.log(res.data);
           this.setupHoldingsData(res.data);
-          
         })
         .catch(err => console.log(err));
   }
@@ -355,7 +333,6 @@ else{
     const portfolio = props.original.portfolio;
     const oldWeight = props.original.old_weight;
     const nav = props.original.NAV;
-    // console.log(oldWeight)
     this.setState({
       oldWeight: oldWeight,
       NAV: nav,
@@ -363,9 +340,7 @@ else{
     });
     API.getHoldingsByPortfolio(portfolio)
       .then(res => {
-        // console.log(res.data);
-        this.setupHoldingsData(res.data);
-        
+        this.setupHoldingsData(res.data);    
       })
       .catch(err => console.log(err));
   };
@@ -374,7 +349,7 @@ else{
   showAllHoldings = () => {
     if (this.state.showsidebar){
     this.setState({
-      portfolioname:"Holdings Table"
+      portfolioname:"All Holdings"
     })
    
     API.aggregateHoldings()
@@ -386,7 +361,7 @@ else{
     }
       else
       { this.toggleSideBar(); this.setState({
-        portfolioname:"Holdings Table"
+        portfolioname:"All Holdings"
       })
      
       API.aggregateHoldings()
@@ -413,8 +388,6 @@ else{
     this.setState({
       holdingsData: data
     });
-    // console.log(this.state.data)
-    //console.log(this.state.holdingsData);
   };
 
   handleAllHolding = () => {
@@ -449,9 +422,6 @@ else{
   setupCurrentCash = () => {
     let portfolios = this.state.data;
     let staging = this.state.stagingData;
-    // const index = portfolios.findIndex(element => {
-    //   return element.id === props.row.id;
-    // });
     portfolios.map(element => {
       const nav = element.NAV;
       const cash = element.cash;
@@ -473,8 +443,6 @@ else{
   };
 
   render = () => {
-    //console.log(this.state.data.length);
-    // console.log(this.state.data);
     const sidebarvis = this.state.showsidebar ? "show" : "hide";
     return (
       <div className="App">
@@ -640,43 +608,6 @@ else{
                         show: false,
                         minWidth: 125
                       },
-                      // {
-                      //   Header: "Tickers",
-                      //   accessor: "ticker"
-                      // },
-                      // {
-                      //   Header: "Shares Owned",
-                      //   accessor: "shares"
-                      // },
-                      // {
-                      //   Header: "Closing Price",
-                      //   accessor: "closeprice"
-                      // },
-                      // {
-                      //   Header: "New Weight(%)",
-                      //   filterable: false,
-                      //   Cell: props => (
-                      //     <div>
-                      //       <input
-                      //         type="text"
-                      //         id="input1"
-                      //         placeholder="%"
-                      //         style={{
-                      //           width: "50px"
-                      //         }}
-                      //         className="number"
-                      //         value={this.getnewWeightValue(props)}
-                      //         onChange={e =>
-                      //           this.handleNewWeightChange(props, e)
-                      //         }
-                      //       />
-                      //     </div>
-                      //   )
-                      // },
-                      // {
-                      //   Header: "Shares to Buy/Sell",
-                      //   accessor: "shares_buy_sell",
-                      // },
                       {
                         Header: "Ticker",
                         id: "ticker",
@@ -708,40 +639,6 @@ else{
                         minWidth: 125,
                         filterable: false
                       },
-                      // {
-                      //   Header: "New Weight(%)",
-                      //   filterable: false,
-                      //   minWidth: 125,
-                      //   Cell: props => (
-                      //     <div>
-                      //       <input
-                      //         type="text"
-                      //         id="input1"
-                      //         placeholder="%"
-                      //         style={{
-                      //           width: "50px"
-                      //         }}
-                      //         className="number"
-                      //         value={this.getnewWeightValue(props)}
-                      //         onChange={e =>
-                      //           this.handleNewWeightChange(props, e)
-                      //         }
-                      //       />
-                      //     </div>
-                      //   )
-                      // },
-                      // {
-                      //   Header: "Shares to Buy/Sell",
-                      //   accessor: "shares_buy_sell",
-                      //   filterable: false,
-                      //   minWidth: 125
-                      // },
-                      // {
-                      //   Header: "Buy Or Sell",
-                      //   accessor: "buy_or_sell",
-                      //   filterable: false,
-                      //   minWidth: 125
-                      // }
                     ]
                   }
                 ]}
@@ -794,11 +691,13 @@ else{
                     {
                       Header: "Old Weight(%)",
                       accessor: "old_weight",
+                      Cell: props => parseFloat(props.value).toFixed(2),
                       minWidth: 125
                     },
                     {
                       Header: "New Weight(%)",
                       accessor: "new_weight",
+                      Cell: props => parseFloat(props.value).toFixed(2),
                       minWidth: 125
                     },
                     {
