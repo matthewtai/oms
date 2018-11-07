@@ -492,8 +492,9 @@ else{
          
         </div>
         {/* ==========================================            Table 1                  =============================== */}
-        <div className="tableandbar">
-        <div className={` portfoliotablediv ${sidebarvis}`}><span className = "portfoliotablespan">Portfolio Table</span> 
+        <div className = "wrapper">
+        <div className={`tablesdiv ${sidebarvis}`}>
+          <div className={` portfoliotablediv ${sidebarvis}`}><span className = "portfoliotablespan">Portfolio Table</span> 
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
@@ -600,9 +601,87 @@ else{
             <h2>NoData</h2>
           )}
           </div>
-          {/*======================================================= table 2 =======================================*/}
+          
+          {/* ======================================================= table 2 ======================================*/}
 
-          <div className={`sideBar ${sidebarvis}`}>
+        <div className={` stagingtablediv ${sidebarvis}`}> <span className ="stagingtabletitlename">Staging Table</span>
+          {this.state.stagingData.length ? (
+            <ReactTable
+              data={this.state.stagingData}
+              columns={[
+                {
+                  //Header: "Name",
+                  columns: [
+                    {
+                      Header: "ID",
+                      id: "id",
+                      accessor: "id",
+                      show: false
+                    },
+                    {
+                      Header: "Portfolio Manager",
+                      accessor: "portfolio_manager",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Portfolio",
+                      accessor: "portfolio",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Ticker",
+                      accessor: "ticker",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Ticker Name",
+                      accessor: "ticker_name",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Old Weight(%)",
+                      accessor: "old_weight",
+                      Cell: props => parseFloat(props.value).toFixed(2),
+                      minWidth: 100
+                    },
+                    {
+                      Header: "New Weight(%)",
+                      accessor: "new_weight",
+                      Cell: props => parseFloat(props.value).toFixed(2),
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Shares to Buy/Sell",
+                      accessor: "shares_buy_sell",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Buy Or Sell",
+                      accessor: "buy_or_sell",
+                      minWidth: 100
+                    },
+                    {
+                      Header: "Delete",
+                      Cell: props => (
+                        <DeleteBtn onClick={() => this.deleteStaging(props)} />
+                      )
+                    }
+                  ]
+                }
+              ]}
+              //defaultPageSize={10}
+              className="-striped -highlight stagingtable"
+              showPagination={false}
+              pageSize={this.state.stagingData.length}
+            />
+          ) : (
+            <h2>No Data</h2>
+          )}
+          </div>
+        </div>
+          {/*======================================================= table 3 =======================================*/}
+
+            <div className={`sideBar ${sidebarvis}`}>
             <span className = "tabletitlename">{this.state.portfolioname}</span> <CloseSideBtn onClick={() => this.toggleSideBar()} />
             {this.state.holdingsData.length ? (
               <ReactTable
@@ -673,83 +752,9 @@ else{
             )}
           </div>
         </div>
-        {/* ======================================================= table 3 ======================================*/}
-
-        <div className="stagingtable"> <span className ="tabletitlename">Staging Table</span>
-          {this.state.stagingData.length ? (
-            <ReactTable
-              data={this.state.stagingData}
-              columns={[
-                {
-                  //Header: "Name",
-                  columns: [
-                    {
-                      Header: "ID",
-                      id: "id",
-                      accessor: "id",
-                      show: false
-                    },
-                    {
-                      Header: "Portfolio Manager",
-                      accessor: "portfolio_manager",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Portfolio",
-                      accessor: "portfolio",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Ticker",
-                      accessor: "ticker",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Ticker Name",
-                      accessor: "ticker_name",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Old Weight(%)",
-                      accessor: "old_weight",
-                      Cell: props => parseFloat(props.value).toFixed(2),
-                      minWidth: 125
-                    },
-                    {
-                      Header: "New Weight(%)",
-                      accessor: "new_weight",
-                      Cell: props => parseFloat(props.value).toFixed(2),
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Shares to Buy/Sell",
-                      accessor: "shares_buy_sell",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Buy Or Sell",
-                      accessor: "buy_or_sell",
-                      minWidth: 125
-                    },
-                    {
-                      Header: "Delete",
-                      Cell: props => (
-                        <DeleteBtn onClick={() => this.deleteStaging(props)} />
-                      )
-                    }
-                  ]
-                }
-              ]}
-              //defaultPageSize={10}
-              className="-striped -highlight stagingtable"
-              showPagination={false}
-              pageSize={this.state.stagingData.length}
-            />
-          ) : (
-            <h2>No Data</h2>
-          )}
-        </div>
-      </div>
+        
+      
+      </div> 
     );
   };
 }
