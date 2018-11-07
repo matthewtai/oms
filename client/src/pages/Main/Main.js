@@ -18,6 +18,7 @@ import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
 import CloseSideBtn from "../../components/CloseSideBtn";
 import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
+import { elementContains } from "@uifabric/utilities";
 initializeIcons();
 
 class Main extends Component {
@@ -631,13 +632,23 @@ else{
                       },
                       {
                         Header: "Shares Owned",
-                        accessor: "shares",
+                        accessor: "SUM",
+                        Cell: props => (
+                          <div>
+                            {props.original.portfolio ? props.original.shares:  props.original.SUM}
+                          </div>
+                        ),
                         minWidth: 125,
                         filterable: false
                       },
                       {
                         Header: "Total Shares($)",
-                        accessor: "SUM",
+                        accessor: 0,
+                        Cell: props => (
+                          <div>
+                            {props.original.portfolio ? (props.original.shares * props.original.closeprice).toFixed(2): (props.original.SUM * props.original.closeprice).toFixed(2)}
+                          </div>
+                        ),
                         minWidth: 125,
                         filterable: false
                       },
