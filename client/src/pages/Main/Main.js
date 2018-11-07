@@ -48,10 +48,17 @@ class Main extends Component {
   };
 
   componentDidMount() {
-    this.loadPortfolios();
-    this.loadStagingData();
+    this.loadPortfolioStaging();
     this.handlePortfolioManager();
     this.handleAllHolding();
+  }
+
+  loadPortfolioStaging(){
+    Promise.all([this.loadPortfolios(), this.loadStagingData()]).then(res => {
+      console.log(res);
+      this.setupCurrentCash();
+    })
+    .catch(err => console.log(err));
   }
 
   loadUsers = () => {
@@ -60,11 +67,14 @@ class Main extends Component {
       .catch(err => console.log(err));
   };
   loadPortfolios = () => {
-    API.getPortfolios()
+    return new Promise((resolve,reject)=>{
+      API.getPortfolios()
       .then(res => {
         this.setupData(res.data);
+        resolve(true);
       })
-      .catch(err => console.log(err));
+      .catch(err => reject(err));
+    })
   };
 
   findHolding = tickerName => {
@@ -100,17 +110,20 @@ class Main extends Component {
   };
 
   loadStagingData = () => {
-    API.getStaging().then(res => {
-      this.setState({
-        stagingData: res.data
-      });
-      this.setupCurrentCash();
+    return new Promise((resolve,reject)=>{
+      API.getStaging().then(res => {
+        this.setState({
+          stagingData: res.data
+        });
+        resolve(true);
+      })
+      .catch(err => reject(err));
     });
   };
 
   deleteStaging = props => {
     API.deleteStagingRow(props.original.id).then(res => {
-      this.loadStagingData();
+      this.loadPortfolioStaging();
     });
   };
 
@@ -228,8 +241,7 @@ class Main extends Component {
 
     API.postStagingData(save)
       .then(res => {
-        this.loadStagingData();
-        this.loadPortfolios();
+        this.loadPortfolioStaging();
         // this.loadCashUpdate();
       })
       .catch(err => console.log(err));
@@ -427,18 +439,14 @@ else{
       const cash = element.cash;
       let oldweight = 0;
       let newWeight = 0;
-      const index = staging.findIndex(stagingItem => {
+      staging.map(stagingItem => {
           if(stagingItem.portfolio === element.portfolio /*&& stagingItem.ticker_name === this.state.tickerName*/){
-            return stagingItem;
+            oldweight += parseFloat(stagingItem.old_weight);
+            newWeight += parseFloat(stagingItem.new_weight);
           }
         });
-      if(index > -1){
-        oldweight = staging[index].old_weight;
-        newWeight = staging[index].new_weight;
-      }
       element.currentCash = (((cash/nav)*100)-(newWeight-oldweight)).toFixed(2);
-    })
-    //console.log(portfolios);
+    });
     this.setState({data : portfolios});
   };
 
