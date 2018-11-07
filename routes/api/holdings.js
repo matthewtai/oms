@@ -5,7 +5,7 @@ module.exports = function(app) {
   
   app.get("/api/aggregate/Holdings/", function(req, res) {
     //console.log("getting holdings");
-    db.Holdings.aggregate('shares', 'SUM', { plain: false, group: [ 'ticker' ], attributes: [ 'ticker' ] 
+    db.Holdings.aggregate('shares', 'SUM', { plain: false, group: [ 'ticker' ], attributes: [ 'ticker', 'closeprice' ]
     // db.Holdings.findAll({
     // attributes : [[sequelize.fn('DISTINCT', sequelize.col('shares')), 'ticker']]
     }).then(function(result) {
