@@ -6,6 +6,21 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 var db = require("./models");
 // Define middleware here
+
+const passport = require('passport');
+const passportConfig = require('./config/passport');
+const keys = require('./routes/api/keys/keys')
+var session = require('express-session')
+
+app.use(session({
+  secret: 'thisisthesecretsessionkey',
+  saveUninitialized: true,
+  cookie: { secure: true }
+}));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 // Serve up static assets (usually on heroku)
@@ -23,6 +38,7 @@ require("./routes/api/holdings")(app);
 // require("./routes/api/alphaApi")(app);
 //require("./routes/htmlRoutes")(app);
 app.use("/api", apiRoutes);
+app.use(express)
 
 var syncOptions = { force: false };
 

@@ -46,7 +46,7 @@ export default class Login extends Component {
     console.log(userInput);
     API.postingLoginData(userInput)
       .then(res => {
-        // console.log(res);
+        console.log(res);
         if (res.data !== null) {
           sessionStorage.name = res.data.firstName;
           window.location.href = "/oms";
@@ -72,8 +72,8 @@ export default class Login extends Component {
                 placeholder = "Username"
                 value={this.state.userName}
                 onChange={this.handleUserNameChange}
-                onfocus={this.placeholder = ""}
-                onBlur={this.placeholder = "Username"}
+                // onfocus={this.placeholder = ""}
+                // onBlur={this.placeholder = "Username"}
               />
   
             </div>
@@ -85,8 +85,8 @@ export default class Login extends Component {
                 value={this.state.password}
                 onChange={this.handlePasswordChange}
                 placeholder = "Password"
-              onfocus={(e) => e.target.placeholder = ""}
-              onBlur={(e) => e.target.placeholder = "Password"}
+              // onfocus={(e) => e.target.placeholder = ""}
+              // onBlur={(e) => e.target.placeholder = "Password"}
               />
              
             </div>

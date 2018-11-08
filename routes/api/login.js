@@ -16,4 +16,19 @@ module.exports = function(app) {
             res.json(result);
         });
     });
+
+    app.post("/api/signup", (req,res) => {
+        db.User.create({
+            username: req.body.userName,
+            password: req.body.password
+        }).then(result => {
+            console.log(result)
+            res.json(result)
+        })
+         .catch(function(err) {
+             res.json(err)
+         });
+    });
+
+    
 }

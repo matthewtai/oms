@@ -33,6 +33,9 @@ export default {
   postingLoginData: function(postingData){
     return axios.post("/api/login/accounts", postingData);
   },
+  creatingUsers: function(userData){
+    return axios.post('/api/signup', userData);
+  },
   getHoldings: function(tickerName){
     return axios.get("/api/Holdings/"+tickerName);
   },
