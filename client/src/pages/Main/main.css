@@ -67,7 +67,7 @@ body{
 
 
 .top {
-  background:rgb(42, 177, 223);
+  background:rgb(0, 135, 182);
   border-bottom: 1px solid  rgb(68, 54, 36);
 };
   
@@ -75,7 +75,10 @@ body{
   font-family: "Nunito Sans", sans-serif;
   color: rgb(68, 54, 36);
 }
-
+.ReactTable .rt-thead.-filters input, .ReactTable .rt-thead.-filters select{
+  border-radius:30px !important;
+  box-shadow: 0px 3px 15px rgba(0,0,0,0.2) !important;
+}
 .text-input {
   position: relative;
   margin-top: 50px;
@@ -112,6 +115,8 @@ input[type="text"]:focus {
   color: #999;
  
 }
+
+
 .portfoliotablespan{
 font-weight: bold;
 }
