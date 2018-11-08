@@ -8,9 +8,9 @@ import "./main.css";
 import API from "../../utils/API";
 import "react-table/react-table.css";
 import ReactTable from "react-table";
-import StagingTable from "../../components/StagingTable/StagingTable";
+// import StagingTable from "../../components/StagingTable/StagingTable";
 import { SearchBox } from "office-ui-fabric-react/lib/SearchBox";
-import { Fabric } from "office-ui-fabric-react/lib/Fabric";
+// import { Fabric } from "office-ui-fabric-react/lib/Fabric";
 import { initializeIcons } from "@uifabric/icons";
 import SaveBtn from "../../components/saveBtn/saveBtn";
 import DeleteBtn from "../../components/DeleteBtn";
@@ -18,7 +18,7 @@ import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
 import CloseSideBtn from "../../components/CloseSideBtn";
 import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
-import { elementContains } from "@uifabric/utilities";
+// import { elementContains } from "@uifabric/utilities";
 initializeIcons();
 
 class Main extends Component {
@@ -529,7 +529,7 @@ else{
         {/* ==========================================            Table 1                  =============================== */}
         <div className = "wrapper">
         <div className={`tablesdiv ${sidebarvis}`}>
-          <div className={` portfoliotablediv ${sidebarvis}`}><span className = "portfoliotablespan">Portfolio Table</span> 
+          <div className={` portfoliotablediv ${sidebarvis}`}><span className = "portfoliotablespan">Portfolios</span> 
           {this.state.data.length ? (
             <ReactTable
               data={this.state.data}
@@ -639,7 +639,7 @@ else{
           
           {/* ======================================================= table 2 ======================================*/}
 
-        <div className={` stagingtablediv ${sidebarvis}`}> <span className ="stagingtabletitlename">Staging Table</span>
+        <div className={` stagingtablediv ${sidebarvis}`}> <span className ="stagingtabletitlename">Trade Orders</span>
           {this.state.stagingData.length ? (
             <ReactTable
               data={this.state.stagingData}
