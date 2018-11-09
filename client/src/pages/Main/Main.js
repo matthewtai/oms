@@ -38,7 +38,8 @@ class Main extends Component {
     oldWeight: 0,
     NAV: 0,
     showsidebar: false,
-    portfolioname: ""
+    portfolioname: "",
+    timer: 0
   };
 
   toggleSideBar = () => {
@@ -52,9 +53,16 @@ class Main extends Component {
     this.loadPortfolioStaging();
     this.handlePortfolioManager();
     this.handleAllHolding();
-    setTimeout(this.autoRefresh, 2000);
+    setTimeout(this.autoRefresh, 5000);
+    setTimeout(this.timeStamp, 1000);
     //this.autoRefresh();
   }
+  timeStamp = () => {
+    let currentTime = this.state.timer;
+    currentTime++;
+    this.setState({ timer: currentTime });
+    setTimeout(this.timeStamp, 1000);
+  };
 
   autoRefresh = () => {
     Promise.all([API.getPortfolios(), this.loadStagingData()]).then(res => {
@@ -70,14 +78,15 @@ class Main extends Component {
         refPortfolios[i].shares_owned = portfolios[i].shares_owned;
       }
       this.setState({
-        data: refPortfolios
+        data: refPortfolios,
+        timer: 0
       });
       this.setupCurrentCash();
-      console.log("doing!");
+      //console.log("doing!");
     })
     .catch(err => console.log(err));
     
-    setTimeout(this.autoRefresh, 2000);
+    setTimeout(this.autoRefresh, 5000);
   }
 
   loadPortfolioStaging(){
@@ -332,11 +341,14 @@ class Main extends Component {
       this.setState({
         holdingsData: portfolios
       });
-      this.calculateShares(props);
+      //this.calculateShares(props);
     } else {
       this.setState({
         data: portfolios
       });
+      //this.calculateShares(props);
+    }
+    if(parseInt(event.target.value)){
       this.calculateShares(props);
     }
   };
@@ -516,13 +528,17 @@ else{
           </div>
           </div>
           
-          <div className ="buttonsdiv">
-         
-            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
-            
-            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
-            
-          </div>
+          <div className="buttonsdiv">
+           <span className="timer">
+             <i className="ms-Icon ms-Icon--Clock" /> Last updated {this.state.timer} seconds ago
+           </span>
+           <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+
+           <HoldingsBtn
+             className="holdingsButton"
+             showAllHoldings={this.showAllHoldings}
+           />
+         </div>
         
          
         </div>
