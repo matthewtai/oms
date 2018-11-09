@@ -710,7 +710,7 @@ else{
               pageSize={this.state.stagingData.length}
             />
           ) : (
-            <h2>No Data</h2>
+            <h2>No Trades Ordered</h2>
           )}
           </div>
         </div>
@@ -764,7 +764,7 @@ else{
                         filterable: false
                       },
                       {
-                        Header: "Total Shares($)",
+                        Header: "Notional ($)",
                         accessor: 0,
                         Cell: props => (
                           <div>
