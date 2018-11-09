@@ -238,3 +238,11 @@ transform: translateX(130%);
  
 }
 
+.timer{
+  margin-left:5px;
+  padding-top:20px;
+  position: absolute;
+  left: 0;
+  color:white;
+ }
+
