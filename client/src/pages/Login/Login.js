@@ -49,7 +49,7 @@ export default class Login extends Component {
         // console.log(res);
         if (res.data !== null) {
           sessionStorage.name = res.data.firstName;
-          window.location.href = "/oms";
+          this.props.history.push('/oms');;
         } else {
           console.log(`does not work`);
         }
