@@ -38,7 +38,8 @@ class Main extends Component {
     oldWeight: 0,
     NAV: 0,
     showsidebar: false,
-    portfolioname: ""
+    portfolioname: "",
+    timer: 0
   };
 
   toggleSideBar = () => {
@@ -52,11 +53,45 @@ class Main extends Component {
     this.loadPortfolioStaging();
     this.handlePortfolioManager();
     this.handleAllHolding();
+    setTimeout(this.autoRefresh, 5000);
+    setTimeout(this.timeStamp, 1000);
+    //this.autoRefresh();
+  }
+  timeStamp = () => {
+    let currentTime = this.state.timer;
+    currentTime++;
+    this.setState({ timer: currentTime });
+    setTimeout(this.timeStamp, 1000);
+  };
+
+  autoRefresh = () => {
+    Promise.all([API.getPortfolios(), this.loadStagingData()]).then(res => {
+      //console.log(res[0]);
+      let refPortfolios = res[0].data;
+      let portfolios = this.state.data;
+      for(var i = 0; i < portfolios.length; i++){
+        refPortfolios[i].newWeight = portfolios[i].newWeight;
+        refPortfolios[i].changed = portfolios[i].changed; 
+        refPortfolios[i].shares_buy_sell = portfolios[i].shares_buy_sell;
+        refPortfolios[i].buy_or_sell = portfolios[i].buy_or_sell;
+        refPortfolios[i].old_weight = portfolios[i].old_weight;
+        refPortfolios[i].shares_owned = portfolios[i].shares_owned;
+      }
+      this.setState({
+        data: refPortfolios,
+        timer: 0
+      });
+      this.setupCurrentCash();
+      //console.log("doing!");
+    })
+    .catch(err => console.log(err));
+    
+    setTimeout(this.autoRefresh, 5000);
   }
 
   loadPortfolioStaging(){
     Promise.all([this.loadPortfolios(), this.loadStagingData()]).then(res => {
-      console.log(res);
+      //console.log(res);
       this.setupCurrentCash();
     })
     .catch(err => console.log(err));
@@ -169,7 +204,9 @@ class Main extends Component {
           ticker: res.data["Global Quote"]["01. symbol"],
           price: parseFloat(res.data["Global Quote"]["05. price"]).toFixed(2)
         });
+
         this.findHolding(this.state.ticker);
+
         this.setState((state, props) => {
           return {
             ...state,
@@ -204,12 +241,13 @@ class Main extends Component {
         this.setState({
           exchangerate: exchangerate[0]["5. Exchange Rate"]
         });
+        this.handleCurrentWeight();
       })
       .catch(err => console.log(err));
   };
 
   handleSubmit = () => {
-    console.log(this.state.value)
+    //console.log(this.state.value)
     this.performSearch(this.state.value);
     this.handleAlphaApi(this.state.value);
   };
@@ -219,7 +257,7 @@ class Main extends Component {
     const holdings = this.state.holdingsData;
     const portfolios = this.state.data
     portfolios.push(...holdings)
-    console.log(portfolios)
+    //console.log(portfolios)
     portfolios.map(element => {
       if (element.changed) {
         this.handleSaveStages(element);
@@ -266,7 +304,7 @@ class Main extends Component {
 
   calculateShares = props => {
     //event.preventDefault();
-    console.log(props);
+    //console.log(props);
     const portfolios = props.original.holdings? this.state.holdingsData : this.state.data;
     const index = portfolios.findIndex(element => {
       return element.id === props.row.id;
@@ -303,11 +341,14 @@ class Main extends Component {
       this.setState({
         holdingsData: portfolios
       });
-      this.calculateShares(props);
+      //this.calculateShares(props);
     } else {
       this.setState({
         data: portfolios
       });
+      //this.calculateShares(props);
+    }
+    if(parseInt(event.target.value)){
       this.calculateShares(props);
     }
   };
@@ -318,6 +359,7 @@ class Main extends Component {
       return element.id === props.row.id;
     });
     return portfolios[index].newWeight;
+    //this.setState
   };
 
   testing = () => {
@@ -367,7 +409,7 @@ else{
    
     API.aggregateHoldings()
       .then(res => {
-        console.log(res)
+        //console.log(res)
         this.setupHoldingsData(res.data);
       })
       .catch(err => console.log(err));
@@ -379,7 +421,7 @@ else{
      
       API.aggregateHoldings()
         .then(res => {
-          console.log(res)
+          //console.log(res)
           this.setupHoldingsData(res.data);
         })
         .catch(err => console.log(err));
@@ -387,7 +429,7 @@ else{
   };
 
   setupHoldingsData = data => {
-    console.log(data)
+    //console.log(data)
     data.map(element => {
       element.newWeight = "";
       element.changed = false;
@@ -412,16 +454,21 @@ else{
   };
 
   //old weight
-  handleCurrentWeight = props => {
+  handleCurrentWeight = () => {
     const portfolios = this.state.data;
-    const index = portfolios.findIndex(element => {
-      return element.id === props.row.id;
-    });
-    const shares = portfolios[index].shares_owned;
-    const nav = portfolios[index].NAV;
-    let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
-
-    return (portfolios[index].old_weight = currentWeight);
+    // const index = portfolios.findIndex(element => {
+    //   return element.id === props.row.id;
+    // });
+    portfolios.map(element => {
+      const shares = element.shares_owned;
+      const nav = element.NAV;
+      let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
+      element.old_weight = currentWeight;
+    })
+    // const shares = portfolios[index].shares_owned;
+    // const nav = portfolios[index].NAV;
+    // let currentWeight = (((shares * this.state.price * this.state.exchangerate) / nav) *100).toFixed(2);
+    this.setState({data : portfolios});
   };
   tickerClickSearch = (props) => {
     const value = props.value
@@ -481,13 +528,17 @@ else{
           </div>
           </div>
           
-          <div className ="buttonsdiv">
-         
-            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
-            
-            <HoldingsBtn className = "holdingsButton" showAllHoldings={this.showAllHoldings} />
-            
-          </div>
+          <div className="buttonsdiv">
+           <span className="timer">
+             <i className="ms-Icon ms-Icon--Clock" /> Last updated {this.state.timer} seconds ago
+           </span>
+           <SaveBtn handleStageSubmit={this.handleStageSubmit} />
+
+           <HoldingsBtn
+             className="holdingsButton"
+             showAllHoldings={this.showAllHoldings}
+           />
+         </div>
         
          
         </div>
@@ -545,9 +596,9 @@ else{
                     {
                       Header: "Current Weight(%)",
                       accessor: "old_weight",
-                      Cell: props => {
-                        return <span>{this.handleCurrentWeight(props)}</span>;
-                      },
+                      // Cell: props => {
+                      //   return <span>{this.handleCurrentWeight(props)}</span>;
+                      // },
                       filterable: false,
                       maxWidth: 200
                     },
@@ -675,7 +726,7 @@ else{
               pageSize={this.state.stagingData.length}
             />
           ) : (
-            <h2>No Data</h2>
+            <h2>No Trades Ordered</h2>
           )}
           </div>
         </div>
@@ -729,7 +780,7 @@ else{
                         filterable: false
                       },
                       {
-                        Header: "Total Shares($)",
+                        Header: "Notional ($)",
                         accessor: 0,
                         Cell: props => (
                           <div>
