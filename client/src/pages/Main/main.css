@@ -68,7 +68,11 @@ body{
   right: 0;
   margin-right: 5px;
 }
-
+.rebalanceButton{
+  position: absolute; 
+  right: 310px;
+  margin-right: 5px;
+}
 
 .top {
   background:rgb(0, 135, 182);

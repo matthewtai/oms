@@ -1,0 +1,26 @@
+.rebalanceButton {
+    display: inline-block;
+    font-weight: bold;
+    padding: 8px 10px 5px 10px;
+    text-decoration: none;
+    color:  rgb(68, 54, 36);
+    background: rgba(252, 54, 54, 0.993);
+    border: 0.5px solid rgba(252, 54, 54, 0.993);
+    border-bottom: solid 4px rgba(252, 54, 54, 0.993);
+    border-radius: 15px 15px 0 0;
+    transition: .4s;
+    text-transform: uppercase;
+    /* margin-top: 2px; */
+    cursor: pointer;
+    font-size: 0.8rem;
+}
+  
+.rebalanceButton:hover,
+.rebalanceButton:focus {
+    background: rgba(250, 85, 85, 0.993);
+    border: 0.5px solid rgba(252, 54, 54, 0.993);
+    border-bottom: solid 4px rgba(252, 54, 54, 0.993);
+    color: white;
+    outline: 1;
+    box-shadow: 0px 3px 15px rgba(0,0,0,0.2) !important;
+}
