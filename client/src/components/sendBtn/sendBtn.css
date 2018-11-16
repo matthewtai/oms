@@ -1,0 +1,24 @@
+
+.sendButton {
+  color:  white;
+  background: #E18335;
+  border-radius: 50%;
+  transition: .3s;
+  border: 1px #E18335;
+  /* margin-top: 2px; */
+  cursor: pointer;
+  font-size: 1.5rem;
+  position: relative;
+  right: -49.5%;
+  bottom:3vh;
+  box-shadow: 3px 7px 20px rgba(0,0,0,0.2) !important;
+  z-index: 1;
+}
+
+  .sendButton:hover,
+  .sendButton:focus {
+    background: rgb(235, 177, 130);
+    color: white;
+    outline: 1;
+    box-shadow: 3px 7px 20px rgba(0,0,0,0.2) !important;
+  }
