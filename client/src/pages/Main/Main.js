@@ -17,7 +17,10 @@ import DeleteBtn from "../../components/DeleteBtn";
 import logo from "../Login/img/barlogo-01.png";
 import matchSorter from "match-sorter";
 import CloseSideBtn from "../../components/CloseSideBtn";
-import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn"
+import HoldingsBtn from "../../components/holdingsBtn/holdingsBtn";
+import ThemeButton from "../../components/themebtn/themebtn";
+import SendButton from "../../components/sendBtn/sendBtn";
+
 // import { elementContains } from "@uifabric/utilities";
 initializeIcons();
 
@@ -529,9 +532,9 @@ else{
           </div>
           
           <div className="buttonsdiv">
-           <span className="timer">
-             <i className="ms-Icon ms-Icon--Clock" /> Last updated {this.state.timer} seconds ago
-           </span>
+          
+           <ThemeButton/>
+
            <SaveBtn handleStageSubmit={this.handleStageSubmit} />
 
            <HoldingsBtn
@@ -655,7 +658,9 @@ else{
           
           {/* ======================================================= table 2 ======================================*/}
 
-        <div className={` stagingtablediv ${sidebarvis}`}> <span className ="stagingtabletitlename">Trade Orders</span>
+        <div className={` stagingtablediv ${sidebarvis}`}> <span className ="stagingtabletitlename"> Trade Orders  </span><span className="timer">
+             <i className="ms-Icon ms-Icon--Clock" /> Last updated {this.state.timer} seconds ago
+           </span>
           {this.state.stagingData.length ? (
             <ReactTable
               data={this.state.stagingData}
@@ -728,7 +733,7 @@ else{
           ) : (
             <h2>No Trades Ordered</h2>
           )}
-          </div>
+          <SendButton/></div> 
         </div>
           {/*======================================================= table 3 =======================================*/}
 
@@ -799,7 +804,7 @@ else{
                 pageSize={this.state.holdingsData.length}
               />
             ) : (
-              <h2>NoData</h2>
+              <h2>No Data</h2>
             )}
           </div>
         </div>

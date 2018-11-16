@@ -58,7 +58,11 @@ body{
 .tickerBtn{
   cursor: pointer;
 }
-
+.themeButton{
+  position: absolute; 
+  left: 0;
+  margin-left: 5px;
+}
 .holdingsButton{
   position: absolute; 
   right: 0;
@@ -240,9 +244,6 @@ transform: translateX(130%);
 
 .timer{
   margin-left:5px;
-  padding-top:20px;
-  position: absolute;
-  left: 0;
-  color:white;
+  color:black;
  }
 
